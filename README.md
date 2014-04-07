@@ -85,9 +85,13 @@ These advanced config options are also available:
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
 
-**Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
+**Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
 
 ## Change Log
+
+### 7th April 2014
+
+* New pickup of repo for developement. 
 
 ### 15th October 2012
 
