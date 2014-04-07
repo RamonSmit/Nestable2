@@ -409,9 +409,6 @@
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
             }
-			if ( ! pointElRoot.data('nestable').options.canDrop(this.pointEl) ) {
-                    return;
-            }
             else if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
                 return;
             }
