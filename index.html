@@ -1,181 +1,386 @@
 <!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Nestable : New pickup of Nestable!" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+<!--[if lt IE 7]> <html lang="en" class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html lang="en" class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html lang="en" class="lt-ie9"> <![endif]-->
+<!--[if IE 9]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <title>Nestable</title>
-  </head>
+    <style type="text/css">
 
-  <body>
+.cf:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+* html .cf { zoom: 1; }
+*:first-child+html .cf { zoom: 1; }
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/RamonSmit/Nestable">View on GitHub</a>
+html { margin: 0; padding: 0; }
+body { font-size: 100%; margin: 0; padding: 1.75em; font-family: 'Helvetica Neue', Arial, sans-serif; }
 
-          <h1 id="project_title">Nestable</h1>
-          <h2 id="project_tagline">New pickup of Nestable!</h2>
+h1 { font-size: 1.75em; margin: 0 0 0.6em 0; }
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/RamonSmit/Nestable/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/RamonSmit/Nestable/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+a { color: #2996cc; }
+a:hover { text-decoration: none; }
+
+p { line-height: 1.5em; }
+.small { color: #666; font-size: 0.875em; }
+.large { font-size: 1.25em; }
+
+/**
+ * Nestable
+ */
+
+.dd { position: relative; display: block; margin: 0; padding: 0; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; }
+
+.dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
+.dd-list .dd-list { padding-left: 30px; }
+.dd-collapsed .dd-list { display: none; }
+
+.dd-item,
+.dd-empty,
+.dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
+
+.dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd-handle:hover { color: #2ea8e5; background: #fff; }
+
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
+.dd-item > button[data-action="collapse"]:before { content: '-'; }
+
+.dd-placeholder,
+.dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                              linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+.dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
+.dd-dragel > .dd-item .dd-handle { margin-top: 0; }
+.dd-dragel .dd-handle {
+    -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+            box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+}
+
+/**
+ * Nestable Extras
+ */
+
+.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
+
+#nestable-menu { padding: 0; margin: 20px 0; }
+
+#nestable-output,
+#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
+
+#nestable2 .dd-handle {
+    color: #fff;
+    border: 1px solid #999;
+    background: #bbb;
+    background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
+    background:    -moz-linear-gradient(top, #bbb 0%, #999 100%);
+    background:         linear-gradient(top, #bbb 0%, #999 100%);
+}
+#nestable2 .dd-handle:hover { background: #bbb; }
+#nestable2 .dd-item > button:before { color: #fff; }
+
+@media only screen and (min-width: 700px) { 
+
+    .dd { float: left; width: 48%; }
+    .dd + .dd { margin-left: 2%; }
+
+}
+
+.dd-hover > .dd-handle { background: #2ea8e5 !important; }
+
+/**
+ * Nestable Draggable Handles
+ */
+
+.dd3-content { display: block; height: 30px; margin: 5px 0; padding: 5px 10px 5px 40px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd3-content:hover { color: #2ea8e5; background: #fff; }
+
+.dd-dragel > .dd3-item > .dd3-content { margin: 0; }
+
+.dd3-item > button { margin-left: 30px; }
+
+.dd3-handle { position: absolute; margin: 0; left: 0; top: 0; cursor: pointer; width: 30px; text-indent: 100%; white-space: nowrap; overflow: hidden;
+    border: 1px solid #aaa;
+    background: #ddd;
+    background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:    -moz-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:         linear-gradient(top, #ddd 0%, #bbb 100%);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.dd3-handle:before { content: '≡'; display: block; position: absolute; left: 0; top: 3px; width: 100%; text-align: center; text-indent: 0; color: #fff; font-size: 20px; font-weight: normal; }
+.dd3-handle:hover { background: #ddd; }
+
+/**
+ * Socialite
+ */
+
+.socialite { display: block; float: left; height: 35px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Nestable</h1>
+
+    <p>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery plugin)</p>
+
+    <p><strong><a href="https://github.com/dbushell/Nestable">Download on GitHub</a></strong></p>
+
+    <div class="cf">
+    <a href="http://twitter.com/share" class="socialite twitter-share" data-via="dbushell" data-text="jQuery Nestable plugin" data-url="http://dbushell.github.com/Nestable/" data-size="large" rel="nofollow" target="_blank">
+        <span class="vhidden">Share on Twitter</span>
+    </a>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="nestable" class="anchor" href="#nestable"><span class="octicon octicon-link"></span></a>Nestable</h1>
 
-<h2>
-<a name="please-note" class="anchor" href="#please-note"><span class="octicon octicon-link"></span></a>PLEASE NOTE</h2>
+<p><strong>PLEASE NOTE: I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.</strong></p>
 
-<p><del>I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.</del>.</p>
+    <menu id="nestable-menu">
+        <button type="button" data-action="expand-all">Expand All</button>
+        <button type="button" data-action="collapse-all">Collapse All</button>
+    </menu>
 
-<p><strong>I'm picking up active developement for Nestable! Pull requests are welcome!</strong></p>
+    <div class="cf nestable-lists">
 
-<hr><h3>
-<a name="drag--drop-hierarchical-list-with-mouse-and-touch-compatibility-jquery--zepto-plugin" class="anchor" href="#drag--drop-hierarchical-list-with-mouse-and-touch-compatibility-jquery--zepto-plugin"><span class="octicon octicon-link"></span></a>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)</h3>
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="1">
+                    <div class="dd-handle">Item 1</div>
+                </li>
+                <li class="dd-item" data-id="2">
+                    <div class="dd-handle">Item 2</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="3"><div class="dd-handle">Item 3</div></li>
+                        <li class="dd-item" data-id="4"><div class="dd-handle">Item 4</div></li>
+                        <li class="dd-item" data-id="5">
+                            <div class="dd-handle">Item 5</div>
+                            <ol class="dd-list">
+                                <li class="dd-item" data-id="6"><div class="dd-handle">Item 6</div></li>
+                                <li class="dd-item" data-id="7"><div class="dd-handle">Item 7</div></li>
+                                <li class="dd-item" data-id="8"><div class="dd-handle">Item 8</div></li>
+                            </ol>
+                        </li>
+                        <li class="dd-item" data-id="9"><div class="dd-handle">Item 9</div></li>
+                        <li class="dd-item" data-id="10"><div class="dd-handle">Item 10</div></li>
+                    </ol>
+                </li>
+                <li class="dd-item" data-id="11">
+                    <div class="dd-handle">Item 11</div>
+                </li>
+                <li class="dd-item" data-id="12">
+                    <div class="dd-handle">Item 12</div>
+                </li>
+            </ol>
+        </div>
 
-<p><a href="http://dbushell.github.com/Nestable/"><strong>Try Nestable Demo</strong></a></p>
+        <div class="dd" id="nestable2">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="13">
+                    <div class="dd-handle">Item 13</div>
+                </li>
+                <li class="dd-item" data-id="14">
+                    <div class="dd-handle">Item 14</div>
+                </li>
+                <li class="dd-item" data-id="15">
+                    <div class="dd-handle">Item 15</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="16"><div class="dd-handle">Item 16</div></li>
+                        <li class="dd-item" data-id="17"><div class="dd-handle">Item 17</div></li>
+                        <li class="dd-item" data-id="18"><div class="dd-handle">Item 18</div></li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
 
-<p>Nestable is an experimental example and not under active development. If it suits your requirements feel free to expand upon it!</p>
-
-<h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
-
-<p>Write your nested HTML lists like so:</p>
-
-<pre><code>&lt;div class="dd"&gt;
-    &lt;ol class="dd-list"&gt;
-        &lt;li class="dd-item" data-id="1"&gt;
-            &lt;div class="dd-handle"&gt;Item 1&lt;/div&gt;
-        &lt;/li&gt;
-        &lt;li class="dd-item" data-id="2"&gt;
-            &lt;div class="dd-handle"&gt;Item 2&lt;/div&gt;
-        &lt;/li&gt;
-        &lt;li class="dd-item" data-id="3"&gt;
-            &lt;div class="dd-handle"&gt;Item 3&lt;/div&gt;
-            &lt;ol class="dd-list"&gt;
-                &lt;li class="dd-item" data-id="4"&gt;
-                    &lt;div class="dd-handle"&gt;Item 4&lt;/div&gt;
-                &lt;/li&gt;
-                &lt;li class="dd-item" data-id="5"&gt;
-                    &lt;div class="dd-handle"&gt;Item 5&lt;/div&gt;
-                &lt;/li&gt;
-            &lt;/ol&gt;
-        &lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>Then activate with jQuery like so:</p>
-
-<pre><code>$('.dd').nestable({ /* config options */ });
-</code></pre>
-
-<h3>
-<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h3>
-
-<p>The <code>change</code> event is fired when items are reordered.</p>
-
-<pre><code>$('.dd').on('change', function() {
-    /* on change event */
-});
-</code></pre>
-
-<h3>
-<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h3>
-
-<p>You can get a serialised object with all <code>data-*</code> attributes for each item.</p>
-
-<pre><code>$('.dd').nestable('serialize');
-</code></pre>
-
-<p>The serialised JSON for the example above would be:</p>
-
-<pre><code>[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
-</code></pre>
-
-<h3>
-<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
-
-<p>You can change the follow options:</p>
-
-<ul>
-<li>
-<code>maxDepth</code> number of levels an item can be nested (default <code>5</code>)</li>
-<li>
-<code>group</code> group ID to allow dragging between lists (default <code>0</code>)</li>
-</ul><p>These advanced config options are also available:</p>
-
-<ul>
-<li>
-<code>listNodeName</code> The HTML element to create for lists (default <code>'ol'</code>)</li>
-<li>
-<code>itemNodeName</code> The HTML element to create for list items (default <code>'li'</code>)</li>
-<li>
-<code>rootClass</code> The class of the root element <code>.nestable()</code> was used on (default <code>'dd'</code>)</li>
-<li>
-<code>listClass</code> The class of all list elements (default <code>'dd-list'</code>)</li>
-<li>
-<code>itemClass</code> The class of all list item elements (default <code>'dd-item'</code>)</li>
-<li>
-<code>dragClass</code> The class applied to the list element that is being dragged (default <code>'dd-dragel'</code>)</li>
-<li>
-<code>handleClass</code> The class of the content element inside each list item (default <code>'dd-handle'</code>)</li>
-<li>
-<code>collapsedClass</code> The class applied to lists that have been collapsed (default <code>'dd-collapsed'</code>)</li>
-<li>
-<code>placeClass</code> The class of the placeholder element (default <code>'dd-placeholder'</code>)</li>
-<li>
-<code>emptyClass</code> The class used for empty list placeholder elements (default <code>'dd-empty'</code>)</li>
-<li>
-<code>expandBtnHTML</code> The HTML text used to generate a list item expand button (default <code>'&lt;button data-action="expand"&gt;Expand&gt;&lt;/button&gt;'</code>)</li>
-<li>
-<code>collapseBtnHTML</code> The HTML text used to generate a list item collapse button (default <code>'&lt;button data-action="collapse"&gt;Collapse&lt;/button&gt;'</code>)</li>
-</ul><p><strong>Inspect the <a href="http://dbushell.github.com/Nestable/">Nestable Demo</a> for guidance.</strong></p>
-
-<h2>
-<a name="change-log" class="anchor" href="#change-log"><span class="octicon octicon-link"></span></a>Change Log</h2>
-
-<h3>
-<a name="15th-october-2012" class="anchor" href="#15th-october-2012"><span class="octicon octicon-link"></span></a>15th October 2012</h3>
-
-<ul>
-<li>Merge for Zepto.js support</li>
-<li>Merge fix for remove/detach items</li>
-</ul><h3>
-<a name="27th-june-2012" class="anchor" href="#27th-june-2012"><span class="octicon octicon-link"></span></a>27th June 2012</h3>
-
-<ul>
-<li>Added <code>maxDepth</code> option (default to 5)</li>
-<li>Added empty placeholder</li>
-<li>Updated CSS class structure with options for <code>listClass</code> and <code>itemClass</code>.</li>
-<li>Fixed to allow drag and drop between multiple Nestable instances (off by default).</li>
-<li>Added <code>group</code> option to enabled the above.</li>
-</ul><hr><p>Author: David Bushell <a href="http://dbushell.com/">http://dbushell.com</a> <a href="http://twitter.com/dbushell/">@dbushell</a></p>
-
-<p>Copyright © 2012 David Bushell | BSD &amp; MIT license</p>
-      </section>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Nestable maintained by <a href="https://github.com/RamonSmit">RamonSmit</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <p><strong>Serialised Output (per list)</strong></p>
+
+    <textarea id="nestable-output"></textarea>
+    <textarea id="nestable2-output"></textarea>
+
+    <p>&nbsp;</p>
+
+    <div class="cf nestable-lists">
+
+    <p><strong>Draggable Handles</strong></p>
+
+    <p>If you're clever with your CSS and markup this can be achieved without any JavaScript changes.</p>
+
+        <div class="dd" id="nestable3">
+            <ol class="dd-list">
+                <li class="dd-item dd3-item" data-id="13">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 13</div>
+                </li>
+                <li class="dd-item dd3-item" data-id="14">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 14</div>
+                </li>
+                <li class="dd-item dd3-item" data-id="15">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 15</div>
+                    <ol class="dd-list">
+                        <li class="dd-item dd3-item" data-id="16">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 16</div>
+                        </li>
+                        <li class="dd-item dd3-item" data-id="17">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 17</div>
+                        </li>
+                        <li class="dd-item dd3-item" data-id="18">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 18</div>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+
     </div>
 
+    <p class="small">Copyright &copy; <a href="http://dbushell.com/">David Bushell</a> | Made for <a href="http://www.browserlondon.com/">Browser</a></p>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="jquery.nestable.js"></script>
+<script>
+
+$(document).ready(function()
+{
+
+    var updateOutput = function(e)
+    {
+        var list   = e.length ? e : $(e.target),
+            output = list.data('output');
+        if (window.JSON) {
+            output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+        } else {
+            output.val('JSON browser support required for this demo.');
+        }
+    };
+
+    // activate Nestable for list 1
+    $('#nestable').nestable({
+        group: 1
+    })
+    .on('change', updateOutput);
     
+    // activate Nestable for list 2
+    $('#nestable2').nestable({
+        group: 1
+    })
+    .on('change', updateOutput);
 
-  </body>
+    // output initial serialised data
+    updateOutput($('#nestable').data('output', $('#nestable-output')));
+    updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+    $('#nestable-menu').on('click', function(e)
+    {
+        var target = $(e.target),
+            action = target.data('action');
+        if (action === 'expand-all') {
+            $('.dd').nestable('expandAll');
+        }
+        if (action === 'collapse-all') {
+            $('.dd').nestable('collapseAll');
+        }
+    });
+
+    $('#nestable3').nestable();
+
+    Socialite.load();
+
+});
+
+
+
+/*!
+ * Socialite v2.0
+ * http://socialitejs.com
+ * Copyright (c) 2011 David Bushell
+ * Dual-licensed under the BSD or MIT licenses: http://socialitejs.com/license.txt
+ */
+window.Socialite=function(e,t,n){"use strict";var r=0,i=[],s={},o={},u=/^($|loaded|complete)/,a=e.encodeURIComponent,f={settings:{},trim:function(e){return e.trim?e.trim():e.replace(/^\s+|\s+$/g,"")},hasClass:function(e,t){return(" "+e.className+" ").indexOf(" "+t+" ")!==-1},addClass:function(e,t){f.hasClass(e,t)||(e.className=e.className===""?t:e.className+" "+t)},removeClass:function(e,t){e.className=f.trim(" "+e.className+" ".replace(" "+t+" "," "))},extendObject:function(e,t,r){for(var i in t){var s=e[i]!==n;if(s&&typeof t[i]=="object")f.extendObject(e[i],t[i],r);else if(r||!s)e[i]=t[i]}},getElements:function(e,t){var n=0,r=[],i=!!e.getElementsByClassName,s=i?e.getElementsByClassName(t):e.getElementsByTagName("*");for(;n<s.length;n++)(i||f.hasClass(s[n],t))&&r.push(s[n]);return r},getDataAttributes:function(e,t,n){var r=0,i="",s={},o=e.attributes;for(;r<o.length;r++){var u=o[r].name,f=o[r].value;f.length&&u.indexOf("data-")===0&&(t&&(u=u.substring(5)),n?s[u]=f:i+=a(u)+"="+a(f)+"&")}return n?s:i},copyDataAttributes:function(e,t,n,r){var i=f.getDataAttributes(e,n,!0);for(var s in i)t.setAttribute(r?s.replace(/-/g,"_"):s,i[s])},createIframe:function(e,n){var r=t.createElement("iframe");return r.style.cssText="overflow: hidden; border: none;",f.extendObject(r,{src:e,allowtransparency:"true",frameborder:"0",scrolling:"no"},!0),n&&(r.onload=r.onreadystatechange=function(){u.test(r.readyState||"")&&(r.onload=r.onreadystatechange=null,f.activateInstance(n))}),r},networkReady:function(e){return s[e]?s[e].loaded:n},appendNetwork:function(e){if(!e||e.appended)return;if(typeof e.append=="function"&&e.append(e)===!1){e.appended=e.loaded=!0,f.activateAll(e);return}e.script&&(e.el=t.createElement("script"),f.extendObject(e.el,e.script,!0),e.el.async=!0,e.el.onload=e.el.onreadystatechange=function(){if(u.test(e.el.readyState||"")){e.el.onload=e.el.onreadystatechange=null,e.loaded=!0;if(typeof e.onload=="function"&&e.onload(e)===!1)return;f.activateAll(e)}},t.body.appendChild(e.el)),e.appended=!0},removeNetwork:function(e){return f.networkReady(e.name)?(e.el.parentNode.removeChild(e.el),!(e.appended=e.loaded=!1)):!1},reloadNetwork:function(e){var t=s[e];t&&f.removeNetwork(t)&&f.appendNetwork(t)},createInstance:function(e,t){var s=!0,o={el:e,uid:r++,widget:t};return i.push(o),t.process!==n&&(s=typeof t.process=="function"?t.process(o):!1),s&&f.processInstance(o),o.el.setAttribute("data-socialite",o.uid),o.el.className="socialite "+t.name+" socialite-instance",o},processInstance:function(e){var n=e.el;e.el=t.createElement("div"),e.el.className=n.className,f.copyDataAttributes(n,e.el),n.nodeName.toLowerCase()==="a"&&!n.getAttribute("data-default-href")&&e.el.setAttribute("data-default-href",n.getAttribute("href"));var r=n.parentNode;r.insertBefore(e.el,n),r.removeChild(n)},activateInstance:function(e){if(e&&!e.loaded)return e.loaded=!0,typeof e.widget.activate=="function"&&e.widget.activate(e),f.addClass(e.el,"socialite-loaded"),e.onload?e.onload(e.el):null},activateAll:function(e){typeof e=="string"&&(e=s[e]);for(var t=0;t<i.length;t++){var n=i[t];n.init&&n.widget.network===e&&f.activateInstance(n)}},load:function(e,n,r,s,u){e=e&&typeof e=="object"&&e.nodeType===1?e:t;if(!n||typeof n!="object"){f.load(e,f.getElements(e,"socialite"),r,s,u);return}var a;if(/Array/.test(Object.prototype.toString.call(n))){for(a=0;a<n.length;a++)f.load(e,n[a],r,s,u);return}if(n.nodeType!==1)return;if(!r||!o[r]){r=null;var l=n.className.split(" ");for(a=0;a<l.length;a++)if(o[l[a]]){r=l[a];break}if(!r)return}var c,h=o[r],p=parseInt(n.getAttribute("data-socialite"),10);if(!isNaN(p)){for(a=0;a<i.length;a++)if(i[a].uid===p){c=i[a];break}}else c=f.createInstance(n,h);if(u||!c)return;c.init||(c.init=!0,c.onload=typeof s=="function"?s:null,h.init(c)),h.network.appended?f.networkReady(h.network.name)&&f.activateInstance(c):f.appendNetwork(h.network)},activate:function(t,n,r){e.Socialite.load(null,t,n,r)},process:function(t,n,r){e.Socialite.load(t,n,r,null,!0)},network:function(e,t){s[e]={name:e,el:null,appended:!1,loaded:!1,widgets:{}},t&&f.extendObject(s[e],t)},widget:function(e,t,n){n.name=e+"-"+t;if(!s[e]||o[n.name])return;n.network=s[e],s[e].widgets[t]=o[n.name]=n},setup:function(e){f.extendObject(f.settings,e,!0)}};return f}(window,window.document),function(e,n,r,i){r.setup({twitter:{lang:"en"}}),r.network("twitter",{script:{src:"//platform.twitter.com/widgets.js",id:"twitter-wjs",charset:"utf-8"},append:function(){var n=typeof e.twttr!="object",i=r.settings.twitter,s=["click","tweet","retweet","favorite","follow"];return n&&(e.twttr=t={_e:[],ready:function(e){t._e.push(e)}}),e.twttr.ready(function(e){for(var t=0;t<s.length;t++){var n=s[t];typeof i["on"+n]=="function"&&e.events.bind(n,i["on"+n])}r.activateAll("twitter")}),n}});var s=function(e){var t=n.createElement("a");t.className=e.widget.name+"-button",r.copyDataAttributes(e.el,t),t.setAttribute("href",e.el.getAttribute("data-default-href")),t.setAttribute("data-lang",e.el.getAttribute("data-lang")||r.settings.twitter.lang),e.el.appendChild(t)},o=function(t){e.twttr&&typeof e.twttr.widgets=="object"&&typeof e.twttr.widgets.load=="function"&&e.twttr.widgets.load()};r.widget("twitter","share",{init:s,activate:o}),r.widget("twitter","follow",{init:s,activate:o}),r.widget("twitter","hashtag",{init:s,activate:o}),r.widget("twitter","mention",{init:s,activate:o}),r.widget("twitter","embed",{process:function(e){e.innerEl=e.el,e.innerEl.getAttribute("data-lang")||e.innerEl.setAttribute("data-lang",r.settings.twitter.lang),e.el=n.createElement("div"),e.el.className=e.innerEl.className,e.innerEl.className="",e.innerEl.parentNode.insertBefore(e.el,e.innerEl),e.el.appendChild(e.innerEl)},init:function(e){e.innerEl.className="twitter-tweet"},activate:o})}(window,window.document,window.Socialite);
+/*!
+ * Socialite v2.0 - GitHub extension
+ * http://socialitejs.com
+ * Copyright (c) 2011 David Bushell
+ * Dual-licensed under the BSD or MIT licenses: http://socialitejs.com/license.txt
+ */
+(function(window, document, Socialite, undefined)
+{
+    // http://markdotto.github.com/github-buttons/
+    // https://github.com/markdotto/github-buttons/
+
+    Socialite.network('github');
+
+    // github.size[size][type][has_count][dimension]
+    Socialite.setup({
+        github: {
+            size: [
+                {
+                    watch  : [ [ 62,20], [110,20] ],
+                    fork   : [ [ 53,20], [ 95,20] ],
+                    follow : [ [150,20], [200,20] ]
+                },
+                {
+                    watch  : [ [100,30], [170,30] ],
+                    fork   : [ [80, 30], [155,30] ],
+                    follow : [ [200,30], [300,30] ]
+                }
+            ]
+        }
+    });
+
+    var initGitHub = function(instance)
+    {
+        var type   = instance.el.getAttribute('data-type'),
+            size   = instance.el.getAttribute('data-size') === 'large' ? 1 : 0,
+            count  = instance.el.getAttribute('data-count') === 'true' ? 1 : 0,
+            data   = Socialite.settings.github.size;
+
+        type = (type && data[size].hasOwnProperty(type)) ? type : 'watch';
+
+        instance.el.setAttribute('data-type', type);
+        instance.el.setAttribute('data-count', !!count);
+
+        Socialite.processInstance(instance);
+        var src    = 'http://markdotto.github.com/github-buttons/github-btn.html?' + Socialite.getDataAttributes(instance.el, true);
+        var iframe = Socialite.createIframe(src, instance);
+        iframe.style.width = data[size][type][count][0] + 'px';
+        iframe.style.height = data[size][type][count][1] + 'px';
+        instance.el.appendChild(iframe);
+        Socialite.activateInstance(instance);
+    };
+
+    Socialite.widget('github', 'watch',  { process: null, init: initGitHub });
+    Socialite.widget('github', 'fork',   { process: null, init: initGitHub });
+    Socialite.widget('github', 'follow', { process: null, init: initGitHub });
+
+})(window, window.document, window.Socialite);
+</script>
+</body>
 </html>
