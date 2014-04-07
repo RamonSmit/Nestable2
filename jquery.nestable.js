@@ -28,7 +28,7 @@
 
     var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
         eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup';
+        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
@@ -42,17 +42,19 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
+            noChildrenClass : 'dd-nochildren',
             emptyClass      : 'dd-empty',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            callback        : null
         };
 
     function Plugin(element, options)
     {
-        this.w  = $(window);
+        this.w = $(document);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
         this.init();
@@ -98,7 +100,7 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
@@ -157,6 +159,56 @@
                 };
             data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
+        },
+
+        toArray: function()
+        {
+
+            var list = this,
+                o = list.options,
+                sDepth = 0,
+                ret = [],
+                left = 1
+
+            var items = list.el.find(o.listNodeName).first().children(o.itemNodeName);
+
+            items.each(function () {
+                left = _recursiveArray(this, sDepth + 1, left);
+            });
+
+            ret = ret.sort(function(a,b){ return (a.left - b.left); });
+
+            return ret;
+
+            function _recursiveArray(item, depth, left) {
+
+                var right = left + 1,
+                    id,
+                    pid;
+
+                if ($(item).children(o.listNodeName).children(o.itemNodeName).length > 0) {
+                    depth ++;
+                    $(item).children(o.listNodeName).children(o.itemNodeName).each(function () {
+                        right = _recursiveArray($(this), depth, right);
+                    });
+                    depth --;
+                }
+
+                id = $(item).attr('data-id');
+
+                if (depth === sDepth + 1) {
+                    pid = o.rootID;
+                } else {
+                    var pid = $(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id');
+                }
+
+                if (id) {
+                    ret.push({"item_id": id, "parent_id": pid, "depth": depth, "left": left, "right": right});
+                }
+
+                left = right + 1;
+                return left;
+            }
         },
 
         serialise: function()
@@ -293,10 +345,11 @@
             this.placeEl.replaceWith(el);
 
             this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+
+            if($.isFunction(this.options.callback)) {
+              this.options.callback.call(this, this.dragRootEl, el);
             }
+
             this.reset();
         },
 
@@ -359,8 +412,8 @@
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
-                // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                // increase horizontal level if previous sibling exists, is not collapsed, and can have children
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.noChildrenClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
@@ -404,7 +457,7 @@
                 this.dragEl[0].style.visibility = 'visible';
             }
             if (this.pointEl.hasClass(opt.handleClass)) {
-                this.pointEl = this.pointEl.parent(opt.itemNodeName);
+                this.pointEl = this.pointEl.closest(opt.itemNodeName);
             }
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
@@ -451,8 +504,8 @@
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
                 // parent root list has changed
+                this.dragRootEl = pointElRoot;
                 if (isNewRoot) {
-                    this.dragRootEl = pointElRoot;
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
@@ -465,13 +518,13 @@
         var lists  = this,
             retval = this;
 
-        lists.each(function()
+        lists.each(function(i)
         {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", new Date().getTime());
+                $(this).data("nestable-id", i);
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
