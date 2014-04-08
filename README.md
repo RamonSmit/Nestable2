@@ -13,7 +13,7 @@ Nestable
 
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
-Nestable is an experimental example and not under active development. If it suits your requirements feel free to expand upon it!
+Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
 
 ## Usage
 
