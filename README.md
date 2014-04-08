@@ -65,6 +65,48 @@ The serialised JSON for the example above would be:
 
 ### Configuration
 
+### On the fly nestable generation
+	<div class="dd" id="nestable3">
+		<ol class='dd-list dd3-list'>
+			<div id="dd-empty-placeholder"></div>
+		</ol>
+    </div>
+	
+	<script>
+	$(document).ready(function(){ 
+		var obj = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]';
+		var output = '';
+		function buildItem(item) {
+		
+		    var html = "<li class='dd-item' data-id='" + item.id + "'>";
+		    html += "<div class='dd-handle'>" + item.id + "</div>";
+		
+		    if (item.children) {
+		
+		        html += "<ol class='dd-list'>";
+		        $.each(item.children, function (index, sub) {
+		            html += buildItem(sub);
+		        });
+		        html += "</ol>";
+		
+		    }
+		
+		    html += "</li>";
+		
+		    return html;
+		}
+		
+		$.each(JSON.parse(obj), function (index, item) {
+		
+		    output += buildItem(item);
+		
+		});
+		
+		$('#dd-empty-placeholder').html(output);
+		$('#nestable3').nestable();
+	});
+	</script>
+
 You can change the follow options:
 
 * `maxDepth` number of levels an item can be nested (default `5`)
