@@ -63,8 +63,6 @@ The serialised JSON for the example above would be:
 
     [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
 
-### Configuration
-
 ### On the fly nestable generation
 	<div class="dd" id="nestable3">
 		<ol class='dd-list dd3-list'>
@@ -106,7 +104,8 @@ The serialised JSON for the example above would be:
 		$('#nestable3').nestable();
 	});
 	</script>
-
+	
+### Configuration
 You can change the follow options:
 
 * `maxDepth` number of levels an item can be nested (default `5`)
