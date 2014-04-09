@@ -47,11 +47,17 @@ Then activate with jQuery like so:
 
 ### Events
 
+This 'onChange' event is writen by: Douwe de Haan (http://github.com/SerendipityNL)
 The `change` event is fired when items are reordered.
-
-    $('.dd').on('change', function() {
-        /* on change event */
-    });
+    $('#nestable3').nestable({
+		maxDepth : 30,
+		onChange: function($this, $dragEl, $el){
+			// Change event
+			// $this : full function
+			// $dragEl : dragged element
+			// $el : full element
+		}
+	});
 
 ### Methods
 

@@ -49,7 +49,7 @@
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
-            callback        : null
+            onChange        : null
         };
 
     function Plugin(element, options)
@@ -251,8 +251,6 @@
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
-			this.el.trigger('expand', [li]);
-            li.trigger('expand');
         },
 
         collapseItem: function(li)
@@ -264,8 +262,6 @@
                 li.children('[data-action="expand"]').show();
                 li.children(this.options.listNodeName).hide();
             }
-			this.el.trigger('collapse', [li]);
-			li.trigger('collapse');
         },
 
         expandAll: function()
@@ -350,8 +346,8 @@
 
             this.dragEl.remove();
 
-            if($.isFunction(this.options.callback)) {
-              this.options.callback.call(this, this.dragRootEl, el);
+            if($.isFunction(this.options.onChange)) {
+              this.options.onChange.call(this, this.dragRootEl, el);
             }
 
             this.reset();
