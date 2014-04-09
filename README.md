@@ -158,4 +158,4 @@ These advanced config options are also available:
 
 Author: David Bushell [http://dbushell.com](http://dbushell.com/) [@dbushell](http://twitter.com/dbushell/)
 
-Copyright © 2012 David Bushell | BSD & MIT license
+Copyright © 2012 David Bushell / © Ramon Smit 2014 | BSD & MIT license
