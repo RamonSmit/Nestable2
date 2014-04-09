@@ -156,6 +156,7 @@ These advanced config options are also available:
 
 * * *
 
-Author: David Bushell [http://dbushell.com](http://dbushell.com/) [@dbushell](http://twitter.com/dbushell/)
+Original Author: David Bushell [http://dbushell.com](http://dbushell.com/) [@dbushell](http://twitter.com/dbushell/)
+New Author     : Ramon Smit    [http://ramonsmit.nl](http://ramonsmit.nl) [@Ram0nSm1t](https://twitter.com/Ram0nSm1t/)
 
 Copyright © 2012 David Bushell / © Ramon Smit 2014 | BSD & MIT license
