@@ -51,7 +51,6 @@ This `onChange` event is writen by: Douwe de Haan (http://github.com/Serendipity
 The `change` event is deprecated by now.
 ~~~
 	$('.dd').nestable({
-		maxDepth : 30,
 		onChange: function($this, $dragEl, $el){
 			// Change event
 			// $this : full function
