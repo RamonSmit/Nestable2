@@ -73,7 +73,12 @@
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
             $.each(this.el.find(list.options.itemNodeName), function(k, el) {
-                list.setParent($(el));
+                var item = $(el),
+                parent = item.parent();
+                list.setParent(item);
+                if (parent.hasClass(list.options.collapsedClass)) {
+                   list.collapseItem(parent.parent());
+                }
             });
 
             list.el.on('click', 'button', function(e) {
