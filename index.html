@@ -81,11 +81,18 @@
 <h3>
 <a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h3>
 
-<p>The <code>change</code> event is fired when items are reordered.</p>
+<p>This <code>onChange</code> event is writen by: Douwe de Haan (<a href="http://github.com/SerendipityNL">http://github.com/SerendipityNL</a>)
+The <code>change</code> event is deprecated by now.</p>
 
-<pre><code>$('.dd').on('change', function() {
-    /* on change event */
-});
+<pre><code>    $('.dd').nestable({
+        maxDepth : 30,
+        onChange: function($this, $dragEl, $el){
+            // Change event
+            // $this : full function
+            // $dragEl : dragged element
+            // $el : full element
+        }
+    });
 </code></pre>
 
 <h3>
