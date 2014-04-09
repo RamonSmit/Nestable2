@@ -47,9 +47,10 @@ Then activate with jQuery like so:
 
 ### Events
 
-This 'onChange' event is writen by: Douwe de Haan (http://github.com/SerendipityNL)
-The `change` event is fired when items are reordered.
-    $('#nestable3').nestable({
+This `onChange` event is writen by: Douwe de Haan (http://github.com/SerendipityNL)
+The `change` event is deprecated by now.
+~~~
+	$('.dd').nestable({
 		maxDepth : 30,
 		onChange: function($this, $dragEl, $el){
 			// Change event
@@ -58,7 +59,7 @@ The `change` event is fired when items are reordered.
 			// $el : full element
 		}
 	});
-
+~~~
 ### Methods
 
 You can get a serialised object with all `data-*` attributes for each item.
