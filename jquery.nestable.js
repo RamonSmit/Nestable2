@@ -48,8 +48,7 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20,
-            onChange        : null
+            threshold       : 20
         };
 
     function Plugin(element, options)
@@ -319,6 +318,8 @@
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
+            this.setIndexOfItem(dragItem);
+
             // fix for zepto.js
             //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
             dragItem.after(this.placeEl);
@@ -341,6 +342,51 @@
             }
         },
 
+        setIndexOfItem: function(item, index)
+        {
+            if ( (typeof index) === 'undefined'){
+                index = [];
+            }
+
+            index.unshift(item.index());
+
+            if ($(item[0].parentNode)[0] !== this.dragRootEl[0])
+            {
+                this.setIndexOfItem($(item[0].parentNode), index);
+            }
+            else {
+                this.dragEl.data('indexOfItem', index);
+            }
+        },
+
+        restoreItemAtIndex: function(dragElement)
+        {
+            var indexArray = this.dragEl.data('indexOfItem'),
+                currentEl = this.el;
+
+            for (i = 0; i < indexArray.length; i++)
+            {
+                if ((indexArray.length - 1) === parseInt(i))
+                {
+                    placeElement(currentEl, dragElement);
+                    return
+                }
+                currentEl = currentEl[0].children[indexArray[i]];
+            }
+
+            function placeElement(currentEl, dragElement)
+            {
+                if (indexArray[indexArray.length-1] === 0)
+                {
+                    $(currentEl.children[0]).prepend(dragElement.clone());
+                }
+                else
+                {
+                    $(currentEl.children[indexArray[indexArray.length-1]-1]).after(dragElement.clone());
+                }
+            }
+        },
+
         dragStop: function(e)
         {
             // fix for zepto.js
@@ -349,11 +395,21 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
-            this.dragEl.remove();
-
-            if($.isFunction(this.options.onChange)) {
-              this.options.onChange.call(this, this.dragRootEl, el);
+            if (this.hasNewRoot) {
+                if (this.options.fixed === true)
+                {
+                    this.restoreItemAtIndex(el);
+                }
+                else {
+                    this.el.trigger('lostItem');
+                }
+                this.dragRootEl.trigger('gainedItem');
             }
+            else {
+                this.dragRootEl.trigger('change');
+            }
+
+            this.dragEl.remove();
 
             this.reset();
         },
@@ -523,13 +579,22 @@
         var lists  = this,
             retval = this;
 
-        lists.each(function(i)
+        if ( ! ('Nestable' in window))
+        {
+            window.Nestable = {};
+            Nestable.counter = 0;
+        }
+
+        lists.each(function()
         {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
+                Nestable.counter++;
+                
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", i);
+                $(this).data("nestable-id", Nestable.counter);
+
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
