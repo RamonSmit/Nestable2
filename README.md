@@ -46,19 +46,9 @@ Then activate with jQuery like so:
     $('.dd').nestable({ /* config options */ });
 
 ### Events
+`change`: For using an .on handler in jquery
 
-This `onChange` event is writen by: Douwe de Haan (http://github.com/SerendipityNL)
-The `change` event is deprecated by now.
-~~~
-	$('.dd').nestable({
-		onChange: function($this, $dragEl, $el){
-			// Change event
-			// $this : full function
-			// $dragEl : dragged element
-			// $el : full element
-		}
-	});
-~~~
+
 ### Methods
 
 You can get a serialised object with all `data-*` attributes for each item.
