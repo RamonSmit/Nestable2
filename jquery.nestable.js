@@ -301,21 +301,20 @@
 
         dragStart: function(e)
         {
-            var mouse    = this.mouse,
-                target   = $(e.target),
-                dragItem = target.closest(this.options.itemNodeName);
+            var mouse       = this.mouse,
+                target      = $(e.target),
+                dragItem    = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
 
-            mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
-            mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
+            mouse.offsetX = e.pageX - dragItem.offset().left;
+            mouse.offsetY = e.pageY - dragItem.offset().top;
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
             this.dragRootEl = this.el;
-
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
-            this.dragEl.css('width', dragItem.width());
+            this.dragEl.css('width', dragItem.outerWidth());
 
             this.setIndexOfItem(dragItem);
 
@@ -590,7 +589,6 @@
 
             if (!plugin) {
                 Nestable.counter++;
-                
                 $(this).data("nestable", new Plugin(this, params));
                 $(this).data("nestable-id", Nestable.counter);
 
