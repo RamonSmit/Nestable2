@@ -1,6 +1,5 @@
 /*!
- * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell / 2014 Ramon Smit - https://github.com/RamonSmit/Nestable
- * Dual-licensed under the BSD or MIT licenses
+ * Nestable jQuery Plugin - Copyright (c) 2014 Ramon Smit - https://github.com/RamonSmit/Nestable
  */
 ;(function($, window, document, undefined)
 {
