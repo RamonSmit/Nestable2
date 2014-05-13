@@ -47,7 +47,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            fixed           : false
         };
 
     function Plugin(element, options)
@@ -162,6 +163,11 @@
                 };
             data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
+        },
+
+        returnOptions: function()
+        {
+            return this.options;
         },
 
         toArray: function()
@@ -376,7 +382,7 @@
             {
                 if (indexArray[indexArray.length-1] === 0)
                 {
-                    $(currentEl.children[0]).prepend(dragElement.clone());
+                    $(currentEl).prepend(dragElement.clone());
                 }
                 else
                 {
