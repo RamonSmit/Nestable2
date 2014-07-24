@@ -55,7 +55,7 @@
     {
         this.w = $(document);
         this.el = $(element);
-        if (options !== 'undefined' && options.rootClass !== 'dd') {
+        if (options.rootClass !== 'undefined' && options.rootClass !== 'dd') {
           options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
           options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
           options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
