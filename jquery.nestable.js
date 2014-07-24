@@ -55,6 +55,16 @@
     {
         this.w = $(document);
         this.el = $(element);
+        if (options !== 'undefined' && options.rootClass !== 'dd') {
+          options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
+          options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
+          options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
+          options.handleClass = options.handleClass ? options.handleClass : options.rootClass + '-handle';
+          options.collapsedClass = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
+          options.placeClass = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
+          options.noDragClass = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
+          options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
+        }
         this.options = $.extend({}, defaults, options);
         this.init();
     }
