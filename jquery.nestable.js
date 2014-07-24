@@ -48,6 +48,7 @@
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
+            fixedDepth      : false, //fixed item's depth
             fixed           : false
         };
 
