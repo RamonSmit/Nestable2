@@ -384,7 +384,7 @@
                 if ((indexArray.length - 1) === parseInt(i))
                 {
                     placeElement(currentEl, dragElement);
-                    return;
+                    return
                 }
                 currentEl = currentEl[0].children[indexArray[i]];
             }
@@ -484,7 +484,7 @@
             /**
              * move horizontal
              */
-            if (!this.options.fixedDepth && mouse.dirAx && mouse.distAxX >= opt.threshold) {
+            if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
@@ -554,12 +554,6 @@
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
-
-                // fixed item's depth, use for some list has specific type, eg:'Volume, Section, Chapter ...'
-                if(this.options.fixedDepth  && this.dragDepth +1 !== this.pointEl.parents(opt.listNodeName).length) {
-                   return;
-                }
-
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
                 if (depth > opt.maxDepth) {
