@@ -64,6 +64,7 @@
           options.collapsedClass = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
           options.placeClass = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
           options.noDragClass = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
+          options.noChildrenClass = options.noChildrenClass ? options.noChildrenClass : options.rootClass + '-nochildren';
           options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
         }
         this.options = $.extend({}, defaults, options);
@@ -554,6 +555,12 @@
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
+
+                // fixed item's depth, use for some list has specific type, eg:'Volume, Section, Chapter ...'
+                if(this.options.fixedDepth  && this.dragDepth +1 !== this.pointEl.parents(opt.listNodeName).length) {
+                   return;
+                }
+
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
                 if (depth > opt.maxDepth) {
