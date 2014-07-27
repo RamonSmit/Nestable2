@@ -48,6 +48,7 @@
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
+            fixedDepth      : false, //fixed item's depth
             fixed           : false
         };
 
@@ -55,6 +56,17 @@
     {
         this.w = $(document);
         this.el = $(element);
+        if (options.rootClass !== 'undefined' && options.rootClass !== 'dd') {
+          options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
+          options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
+          options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
+          options.handleClass = options.handleClass ? options.handleClass : options.rootClass + '-handle';
+          options.collapsedClass = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
+          options.placeClass = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
+          options.noDragClass = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
+          options.noChildrenClass = options.noChildrenClass ? options.noChildrenClass : options.rootClass + '-nochildren';
+          options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
+        }
         this.options = $.extend({}, defaults, options);
         this.init();
     }
@@ -543,6 +555,12 @@
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
+
+                // fixed item's depth, use for some list has specific type, eg:'Volume, Section, Chapter ...'
+                if(this.options.fixedDepth  && this.dragDepth +1 !== this.pointEl.parents(opt.listNodeName).length) {
+                   return;
+                }
+
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
                 if (depth > opt.maxDepth) {
