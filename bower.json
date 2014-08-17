@@ -1,0 +1,24 @@
+{
+  "name": "nestable2",
+  "version": "0.0.1",
+  "homepage": "https://github.com/RamonSmit/Nestable",
+  "authors": [
+    "Ramon Smit <@Ram0nSm1t>",
+    "David Bushell <@dbushell>"
+  ],
+  "description": "Drag & drop hierarchical list with mouse and touch compatibility",
+  "main": ["jquery.nestable.js"],
+  "keywords": [
+    "jquery",
+    "tree",
+    "list",
+    "sortable",
+    "nestable",
+    "drag",
+    "drop"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">= 1.7.2"
+  }
+}  
