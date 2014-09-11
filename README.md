@@ -62,6 +62,21 @@ The serialised JSON for the example above would be:
     [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
 
 ### On the fly nestable generation
+
+You can passed serialized JSON as an option if you like to dynamically generate a Nestable list:
+
+    <div class="dd" id="nestable-json"></div>
+
+    <script>
+    var json = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]';
+    var options = {'json': json }
+    $('#nestable-json').nestable(options);
+    </script>
+
+NOTE: serialized JSON has been expanded so that an optional "content" property can be passed which allows for arbitrary custom content (including HTML) to be placed in the Nestable item
+
+Or do it yourself the old-fashioned way:
+
 	<div class="dd" id="nestable3">
 		<ol class='dd-list dd3-list'>
 			<div id="dd-empty-placeholder"></div>
@@ -123,6 +138,7 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `json` JSON string used to dynamically generate a Nestable list. This is the same format as the `serialize()` output
 
 **Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
 
