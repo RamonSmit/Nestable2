@@ -38,6 +38,7 @@
             itemClass       : 'dd-item',
             dragClass       : 'dd-dragel',
             handleClass     : 'dd-handle',
+            contentClass    : 'dd-content',
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
@@ -56,7 +57,10 @@
     {
         this.w = $(document);
         this.el = $(element);
-        if (options.rootClass !== 'undefined' && options.rootClass !== 'dd') {
+        if(!options) {
+          options = defaults;
+        }
+        if (options.rootClass !== undefined && options.rootClass !== 'dd') {
           options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
           options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
           options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
@@ -67,7 +71,14 @@
           options.noChildrenClass = options.noChildrenClass ? options.noChildrenClass : options.rootClass + '-nochildren';
           options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
         }
+
         this.options = $.extend({}, defaults, options);
+        
+        // build HTML from serialized JSON if passed
+        if (this.options.json !== undefined) {
+          this._build();
+        }
+
         this.init();
     }
 
@@ -152,6 +163,51 @@
 
         },
 
+        _build: function()
+        {
+          // From JSON Parameter
+          // console.log(options.json);
+          // console.log(this.options);
+
+          var output = "<" + this.options.listNodeName +
+                       " class='" + this.options.listClass + 
+                       "'>";
+
+          function buildItem(item, options) {
+            var html = "<" + options.itemNodeName +
+                       " class='" + options.itemClass + 
+                       "' data-id='" + item.id + 
+                       "'>";
+            var content = item.content ? item.content : item.id;
+            html += "<div class='" + options.handleClass + "'>" +
+                    "<span class='" + options.contentClass + "'>" + 
+                    content +
+                    "</span></div>";
+                
+            if (item.children) {
+              html += "<" + options.listNodeName +
+                      " class='" + options.listClass +
+                      "'>";
+              $.each(item.children, function (index, sub) {
+                html += buildItem(sub, options);
+              });
+              html += "</"+ options.listNodeName + ">";
+            }
+            html += "</"+ options.itemNodeName + ">";
+            return html;
+          }
+                
+          var options = this.options;
+          $.each(JSON.parse(this.options.json), function (index, item) {
+            output += buildItem(item, options);
+          });
+
+          output += "</" + this.options.listNodeName + ">";
+		
+          // console.log(output);
+          $(this.el).html(output);
+        },
+
         serialize: function()
         {
             var data,
@@ -166,6 +222,14 @@
                         var li   = $(this),
                             item = $.extend({}, li.data()),
                             sub  = li.children(list.options.listNodeName);
+
+                        // If we have a content class, add content property
+                        var content = li.find('.' + list.options.contentClass).html()
+                        if(content) {
+                          item.content = content;
+                        }
+
+                        // console.log(li.html());
                         if (sub.length) {
                             item.children = step(sub, depth + 1);
                         }
