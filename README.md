@@ -35,7 +35,7 @@ Write your nested HTML lists like so:
                     <li class="dd-item" data-id="4">
                         <div class="dd-handle">Item 4</div>
                     </li>
-                    <li class="dd-item" data-id="5">
+                    <li class="dd-item" data-id="5" data-foo="bar">
                         <div class="dd-handle">Item 5</div>
                     </li>
                 </ol>
@@ -59,7 +59,7 @@ You can get a serialised object with all `data-*` attributes for each item.
 
 The serialised JSON for the example above would be:
 
-    [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
+    [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5,"foo":"bar"}]}]
 
 ### On the fly nestable generation
 
@@ -68,7 +68,7 @@ You can passed serialized JSON as an option if you like to dynamically generate 
     <div class="dd" id="nestable-json"></div>
 
     <script>
-    var json = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]';
+    var json = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5,"foo":"bar"}]}]';
     var options = {'json': json }
     $('#nestable-json').nestable(options);
     </script>
@@ -126,6 +126,7 @@ You can change the follow options:
 
 These advanced config options are also available:
 
+* `contentCallback` The callback for customizing content (default `function(item) {return item.content || '' ? item.content : item.id;}`)
 * `listNodeName` The HTML element to create for lists (default `'ol'`)
 * `itemNodeName` The HTML element to create for list items (default `'li'`)
 * `rootClass` The class of the root element `.nestable()` was used on (default `'dd'`)
@@ -138,11 +139,16 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `includeContent` Enable or disable the content in output (default `false`)
 * `json` JSON string used to dynamically generate a Nestable list. This is the same format as the `serialize()` output
 
 **Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
 
 ## Change Log
+
+### 7th April 2014
+
+* New pickup of repo for developement. 
 
 ### 7th April 2014
 
