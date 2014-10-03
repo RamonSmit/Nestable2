@@ -53,7 +53,8 @@
         threshold: 20,
         fixedDepth: false, //fixed item's depth
         fixed: false,
-        includeContent: false
+        includeContent: false,
+        callback: function(l, e) {}
     };
 
     function Plugin(element, options) {
@@ -440,6 +441,7 @@
             }
 
             this.dragEl.remove();
+            this.options.callback.call(this, this.dragRootEl, el);
 
             this.reset();
         },
