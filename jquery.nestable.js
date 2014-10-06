@@ -227,6 +227,8 @@
             }
 
             function createDataAttrs(attr) {
+                attr = $.extend({}, attr);
+
                 delete attr.children;
                 delete attr.classes;
                 delete attr.content;
