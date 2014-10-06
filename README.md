@@ -155,6 +155,8 @@ These advanced config options are also available:
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
 * `includeContent` Enable or disable the content in output (default `false`)
+* `listRenderer` The callback for customizing final list output (default `function(children, options) { ... }` - viz. defaults in code)
+* `itemRenderer` The callback for customizing final item output (default `function(item_attrs, content, children, options) { ... }` - viz. defaults in code)
 * `json` JSON string used to dynamically generate a Nestable list. This is the same format as the `serialize()` output
 
 **Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
@@ -163,6 +165,7 @@ These advanced config options are also available:
 
 ### 6th October 2014
 
+* [zemistr] Created listRenderer and itemRenderer. Refactored build from JSON.
 * [zemistr] Added support for adding classes via input data. (```[{"id": 1, "content": "First item", "classes": ["dd-nochildren", "dd-nodrag", ...] }, ... ]```)
 
 ### 3th October 2014
