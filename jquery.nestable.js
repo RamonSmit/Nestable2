@@ -186,6 +186,10 @@
                 var item_classes = {};
                 var classes = item.classes || {};
 
+                if(typeof classes == 'string') {
+                    classes = [classes];
+                }
+
                 delete item.children;
                 delete item.classes;
                 delete item.content;
