@@ -161,6 +161,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 6th October 2014
+
+* [zemistr] Added support for adding classes via input data. (```[{"id": 1, "content": "First item", "classes": ["dd-nochildren", "dd-nodrag", ...] }, ... ]```)
+
 ### 3th October 2014
 
 * [zemistr] Added support for additional data parameters.

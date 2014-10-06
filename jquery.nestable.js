@@ -183,11 +183,26 @@
             function buildItem(item, options) {
                 var children = item.children;
                 var content = options.contentCallback(item);
+                var item_classes = {};
+                var classes = item.classes || {};
 
                 delete item.children;
+                delete item.classes;
                 delete item.content;
 
-                var html = "<" + options.itemNodeName + " class='" + options.itemClass + "'";
+                for(var k in classes) {
+                    // Remove duplicates
+                    item_classes[classes[k]] = classes[k];
+                }
+
+                item_classes[options.itemClass] = options.itemClass;
+
+                // create class string
+                var classes_string = $.map(item_classes, function(val) {
+                    return val;
+                }).join(' ');
+
+                var html = "<" + options.itemNodeName + " class='" + classes_string + "'";
 
                 $.each(item, function(key, value) {
                     if(typeof value == 'object') {
