@@ -62,7 +62,7 @@
 
             return html;
         },
-        itemRenderer: function(item_attrs, content, children, options) {
+        itemRenderer: function(item_attrs, content, children, options, item) {
             var item_attrs_string = $.map(item_attrs, function(value, key) {
                 return ' ' + key + '="' + value + '"';
             }).join(' ');
@@ -267,7 +267,7 @@
                 var content = options.contentCallback(item);
                 var children = buildList(item.children, options);
 
-                return options.itemRenderer(item_attrs, content, children, options);
+                return options.itemRenderer(item_attrs, content, children, options, item);
             }
 
             var json = this.options.json;
