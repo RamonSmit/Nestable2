@@ -54,7 +54,30 @@
         fixedDepth: false, //fixed item's depth
         fixed: false,
         includeContent: false,
-        callback: function(l, e) {}
+        callback: function(l, e) {},
+        listRenderer: function(children, options) {
+            var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
+            html += children;
+            html += '</' + options.listNodeName + '>';
+
+            return html;
+        },
+        itemRenderer: function(item_attrs, content, children, options) {
+            var item_attrs_string = $.map(item_attrs, function(value, key) {
+                return ' ' + key + '="' + value + '"';
+            }).join(' ');
+
+            var html = '<' + options.itemNodeName + item_attrs_string + '>';
+            html += '<' + options.handleNodeName + ' class="' + options.handleClass + '">';
+            html += '<' + options.contentNodeName + ' class="' + options.contentClass + '">';
+            html += content;
+            html += '</' + options.contentNodeName + '>';
+            html += '</' + options.handleNodeName + '>';
+            html += children;
+            html += '</' + options.itemNodeName + '>';
+
+            return html;
+        }
     };
 
     function Plugin(element, options) {
@@ -164,10 +187,6 @@
         },
 
         _build: function() {
-            var output = "<" + this.options.listNodeName +
-                " class='" + this.options.listClass +
-                "'>";
-
             function escapeHtml(text) {
                 var map = {
                     '&': '&amp;',
@@ -180,77 +199,84 @@
                 return text + "".replace(/[&<>"']/g, function(m) { return map[m]; });
             }
 
-            function buildItem(item, options) {
-                var children = item.children;
-                var content = options.contentCallback(item);
-                var item_classes = {};
+            function filterClasses(classes) {
+                var new_classes = {};
+
+                for(var k in classes) {
+                    // Remove duplicates
+                    new_classes[classes[k]] = classes[k];
+                }
+
+                return new_classes;
+            }
+
+            function createClassesString(item, options) {
                 var classes = item.classes || {};
 
                 if(typeof classes == 'string') {
                     classes = [classes];
                 }
 
-                delete item.children;
-                delete item.classes;
-                delete item.content;
-
-                for(var k in classes) {
-                    // Remove duplicates
-                    item_classes[classes[k]] = classes[k];
-                }
-
+                var item_classes = filterClasses(classes);
                 item_classes[options.itemClass] = options.itemClass;
 
                 // create class string
-                var classes_string = $.map(item_classes, function(val) {
+                return $.map(item_classes, function(val) {
                     return val;
                 }).join(' ');
+            }
 
-                var html = "<" + options.itemNodeName + " class='" + classes_string + "'";
+            function createDataAttrs(attr) {
+                attr = $.extend({}, attr);
 
-                $.each(item, function(key, value) {
+                delete attr.children;
+                delete attr.classes;
+                delete attr.content;
+
+                var data_attrs = {};
+
+                $.each(attr, function(key, value) {
                     if(typeof value == 'object') {
                         value = JSON.stringify(value);
                     }
 
-                    html += " data-" + key + "='" + escapeHtml(value) + "'";
+                    data_attrs["data-" + key] = escapeHtml(value);
                 });
 
-                html += ">";
-                html += "<" + options.handleNodeName + " class='" + options.handleClass + "'>";
-                html += "<" + options.contentNodeName + " class='" + options.contentClass + "'>";
-                html += content;
-                html += "</" + options.contentNodeName + "></" + options.handleNodeName + ">";
-
-                if(children) {
-                    html += "<" + options.listNodeName + " class='" + options.listClass + "'>";
-
-                    $.each(children, function(index, sub) {
-                        html += buildItem(sub, options);
-                    });
-
-                    html += "</" + options.listNodeName + ">";
-                }
-
-                html += "</" + options.itemNodeName + ">";
-
-                return html;
+                return data_attrs;
             }
 
-            var options = this.options;
+            function buildList(items, options) {
+                if(!items) {
+                    return '';
+                }
+
+                var children = '';
+
+                $.each(items, function(index, sub) {
+                    children += buildItem(sub, options);
+                });
+
+                return options.listRenderer(children, options);
+            }
+
+            function buildItem(item, options) {
+                var item_attrs = createDataAttrs(item);
+                item_attrs["class"] = createClassesString(item, options);
+
+                var content = options.contentCallback(item);
+                var children = buildList(item.children, options);
+
+                return options.itemRenderer(item_attrs, content, children, options);
+            }
+
             var json = this.options.json;
 
             if(typeof json == 'string') {
                 json = JSON.parse(json);
             }
 
-            $.each(json, function(index, item) {
-                output += buildItem(item, options);
-            });
-
-            output += "</" + this.options.listNodeName + ">";
-
-            $(this.el).html(output);
+            $(this.el).html(buildList(json, this.options));
         },
 
         serialize: function() {
