@@ -13,7 +13,7 @@ Nestable
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
-[**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
+[**Try Nestable Demo**](http://ramonsmit.github.com/Nestable/)
 
 Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
 
@@ -53,7 +53,7 @@ $('.dd').nestable({ /* config options */ });
 
 The `callback` provided as an option is fired when elements are reordered or nested.
 ```js
-$('.dd').nestable({ 
+$('.dd').nestable({
     callback: function(l,e){
         // l is the main container
         // e is the element that was moved
@@ -94,35 +94,35 @@ Or do it yourself the old-fashioned way:
 </div>
 
 <script>
-$(document).ready(function(){ 
+$(document).ready(function(){
     var obj = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]';
     var output = '';
     function buildItem(item) {
-    
+
         var html = "<li class='dd-item' data-id='" + item.id + "'>";
         html += "<div class='dd-handle'>" + item.id + "</div>";
-    
+
         if (item.children) {
-    
+
             html += "<ol class='dd-list'>";
             $.each(item.children, function (index, sub) {
                 html += buildItem(sub);
             });
             html += "</ol>";
-    
+
         }
-    
+
         html += "</li>";
-    
+
         return html;
     }
-    
+
     $.each(JSON.parse(obj), function (index, item) {
-    
+
         output += buildItem(item);
-    
+
     });
-    
+
     $('#dd-empty-placeholder').html(output);
     $('#nestable3').nestable();
 });
@@ -177,7 +177,7 @@ These advanced config options are also available:
 
 ### 7th April 2014
 
-* New pickup of repo for developement. 
+* New pickup of repo for developement.
 
 ### 14th March 2013
 
