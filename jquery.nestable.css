@@ -18,13 +18,6 @@
 .dd-list .dd-list {
   padding-left: 30px;
 }
-.dd-collapsed .dd-list,
-.dd-collapsed .dd-collapse {
-  display: none;
-}
-.dd-collapsed .dd-expand {
-  display: block;
-}
 .dd-item,
 .dd-empty,
 .dd-placeholder {
@@ -54,7 +47,6 @@
   background: #fff;
 }
 .dd-item > button {
-  display: none;
   position: relative;
   cursor: pointer;
   float: left;
@@ -85,7 +77,14 @@
 .dd-item > button.dd-collapse:before {
   content: '-';
 }
-.dd-item > button.dd-collapse {
+.dd-expand {
+  display: none;
+}
+.dd-collapsed .dd-list,
+.dd-collapsed .dd-collapse {
+  display: none;
+}
+.dd-collapsed .dd-expand {
   display: block;
 }
 .dd-empty,
