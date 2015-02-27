@@ -46,8 +46,8 @@
         noDragClass: 'dd-nodrag',
         noChildrenClass: 'dd-nochildren',
         emptyClass: 'dd-empty',
-        expandBtnHTML: '<button data-action="expand" type="button">Expand</button>',
-        collapseBtnHTML: '<button data-action="collapse" type="button">Collapse</button>',
+        expandBtnHTML: '<button class="dd-expand" data-action="expand" type="button">Expand</button>',
+        collapseBtnHTML: '<button class="dd-collapse" data-action="collapse" type="button">Collapse</button>',
         group: 0,
         maxDepth: 5,
         threshold: 20,
@@ -345,18 +345,12 @@
 
         expandItem: function(li) {
             li.removeClass(this.options.collapsedClass);
-            li.children('[data-action="expand"]').hide();
-            li.children('[data-action="collapse"]').show();
-            li.children(this.options.listNodeName).show();
         },
 
         collapseItem: function(li) {
             var lists = li.children(this.options.listNodeName);
             if(lists.length) {
                 li.addClass(this.options.collapsedClass);
-                li.children('[data-action="collapse"]').hide();
-                li.children('[data-action="expand"]').show();
-                li.children(this.options.listNodeName).hide();
             }
         },
 
@@ -379,7 +373,6 @@
                 li.prepend($(this.options.expandBtnHTML));
                 li.prepend($(this.options.collapseBtnHTML));
             }
-            li.children('[data-action="expand"]').hide();
         },
 
         unsetParent: function(li) {
