@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/RamonSmit/Nestable.svg)](https://travis-ci.org/RamonSmit/Nestable)
+
 
 Nestable
 ========
