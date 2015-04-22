@@ -307,6 +307,40 @@
             return data;
         },
 
+        asNestedSet: function() {
+            var list = this, o = list.options, depth = -1, ret = [], lft = 1;
+            var items = list.el.find(o.listNodeName).first().children(o.itemNodeName);
+
+            items.each(function () {
+                lft = traverse(this, depth + 1, lft);
+            });
+
+            ret = ret.sort(function(a,b){ return (a.lft - b.lft); });
+            return ret;
+
+            function traverse(item, depth, lft) {
+                var rgt = lft + 1, id, pid;
+
+                if ($(item).children(o.listNodeName).children(o.itemNodeName).length > 0 ) {
+                    depth++;
+                    $(item).children(o.listNodeName).children(o.itemNodeName).each(function () {
+                        rgt = traverse($(this), depth, rgt);
+                    });
+                    depth--;
+                }
+
+                id = parseInt($(item).attr('data-id'));
+                pid = parseInt($(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id')) || '';
+
+                if (id) {
+                    ret.push({"id": id, "parent_id": pid, "depth": depth, "lft": lft, "rgt": rgt});
+                }
+
+                lft = rgt + 1;
+                return lft;
+            }
+        },
+
         returnOptions: function() {
             return this.options;
         },
