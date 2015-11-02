@@ -62,6 +62,51 @@ $('.dd').nestable({
     }
 });
 ```
+
+`onDragStart` callback provided as an option is fired when user starts to drag an element.
+```js
+$('.dd').nestable({
+    onDragStart: function(l,e){
+        // l is the main container
+        // e is the element that was moved
+    }
+});
+```
+
+This callback can be used to manipulate element which is being dragged as well as whole list.
+For example you can conditionally add `.dd-nochildren` to forbid dropping current element to
+some other elements for instance based on `data-type` of current element and other elements:
+ 
+ ```js
+ $('.dd').nestable({
+     onDragStart: function (l, e) {
+         // get type of dragged element
+         var type = $(e).data('type');
+         
+         // based on type of dragged element add or remove no children class
+         switch (type) {
+             case 'type1':
+                 // element of type1 can be child of type2 and type3
+                 l.find("[data-type=type2]").removeClass('dd-nochildren');
+                 l.find("[data-type=type3]").removeClass('dd-nochildren');
+                 break;
+             case 'type2':
+                 // element of type2 cannot be child of type2 or type3
+                 l.find("[data-type=type2]").addClass('dd-nochildren');
+                 l.find("[data-type=type3]").addClass('dd-nochildren');
+                 break;
+             case 'type3':
+                 // element of type3 cannot be child of type2 but can be child of type3
+                 l.find("[data-type=type2]").addClass('dd-nochildren');
+                 l.find("[data-type=type3]").removeClass('dd-nochildren');
+                 break;
+             default:
+                 console.error("Invalid type");
+         }
+     }
+ });
+ ```
+
 ### Methods
 
 You can get a serialised object with all `data-*` attributes for each item.
