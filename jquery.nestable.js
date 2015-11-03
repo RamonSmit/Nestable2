@@ -55,6 +55,7 @@
         fixed: false,
         includeContent: false,
         callback: function(l, e) {},
+        onDragStart: function(l, e) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
             html += children;
@@ -419,6 +420,8 @@
             var mouse = this.mouse,
                 target = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
+
+            this.options.onDragStart.call(this, this.el, dragItem);
 
             this.placeEl.css('height', dragItem.height());
 
