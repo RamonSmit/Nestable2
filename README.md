@@ -109,6 +109,7 @@ some other elements for instance based on `data-type` of current element and oth
 
 ### Methods
 
+`serialize`:
 You can get a serialised object with all `data-*` attributes for each item.
 ```js
 $('.dd').nestable('serialize');
@@ -117,6 +118,12 @@ The serialised JSON for the example above would be:
 ```json
 [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5,"foo":"bar"}]}]
 ```
+`destroy`:
+You can deactivate the plugin by running
+```js
+    $('.dd').nestable('destroy');
+```
+
 
 ### On the fly nestable generation
 
