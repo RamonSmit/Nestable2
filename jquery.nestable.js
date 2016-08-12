@@ -54,8 +54,8 @@
         fixedDepth: false, //fixed item's depth
         fixed: false,
         includeContent: false,
-        callback: function(l, e) {},
-        onDragStart: function(l, e) {},
+        callback: function(l, e, p) {},
+        onDragStart: function(l, e, p) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
             html += children;
@@ -450,7 +450,11 @@
                 target = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
-            this.options.onDragStart.call(this, this.el, dragItem);
+            var position = {};
+            position.top = e.pageY;
+            position.left = e.pageX;
+
+            this.options.onDragStart.call(this, this.el, dragItem, position);
 
             this.placeEl.css('height', dragItem.height());
 
@@ -531,6 +535,10 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
+            var position = {};
+            position.top = e.pageY;
+            position.left = e.pageX;
+
             if(this.hasNewRoot) {
                 if(this.options.fixed === true) {
                     this.restoreItemAtIndex(el);
@@ -545,7 +553,7 @@
             }
 
             this.dragEl.remove();
-            this.options.callback.call(this, this.dragRootEl, el);
+            this.options.callback.call(this, this.dragRootEl, el, position);
 
             this.reset();
         },
