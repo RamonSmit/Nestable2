@@ -135,7 +135,7 @@
                 }
                 var target = $(e.currentTarget),
                     action = target.data('action'),
-                    item = target.parent(list.options.itemNodeName);
+                    item = target.parents(list.options.itemNodeName).eq(0);
                 if(action === 'collapse') {
                     list.collapseItem(item);
                 }
