@@ -38,7 +38,7 @@ Write your nested HTML lists like so:
                     <div class="dd-handle">Item 4</div>
                 </li>
                 <li class="dd-item" data-id="5" data-foo="bar">
-                    <div class="dd-handle">Item 5</div>
+                    <div class="dd-nodrag">Item 5</div>
                 </li>
             </ol>
         </li>
