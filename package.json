@@ -34,6 +34,9 @@
       "email": "me@zemistr.eu"
     }
   ],
+  "dependencies": [
+    "jquery": "^1.7.2"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/RamonSmit/Nestable/issues"
