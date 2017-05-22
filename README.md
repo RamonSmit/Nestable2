@@ -22,7 +22,7 @@ You can install this package either with `npm` or with `bower`.
 ### npm
 
 ```shell
-npm install nestable2
+npm install --save nestable2
 ```
 
 Then add a `<script>` to your `index.html`:
@@ -36,7 +36,7 @@ Or `require('nestable2')` from your code.
 ### bower
 
 ```shell
-bower install nestable2
+bower install --save nestable2
 ```
 
 ## Usage
@@ -154,9 +154,13 @@ Builds an array where each element looks like:
 }
 ```
 
-`toHierarchy`:
+You can get a hierarchical nested set model like below.
 ```js
-$('.dd').nestable('toHierarchy');
+$('.dd').nestable('asNestedSet');
+```
+The output will be like below:
+```js
+[{"id":1,"parent_id":"","depth":0,"lft":1,"rgt":2},{"id":2,"parent_id":"","depth":0,"lft":3,"rgt":4},{"id":3,"parent_id":"","depth":0,"lft":5,"rgt":10},{"id":4,"parent_id":3,"depth":1,"lft":6,"rgt":7},{"id":5,"parent_id":3,"depth":1,"lft":8,"rgt":9}]
 ```
 
 `destroy`:
@@ -258,6 +262,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 22th May 2017
+
+* [pjona] Added npm installation
+
 ### 10th April 2017
 
 * [timalennon] Added functions: `toHierarchy` and `toArray`
@@ -273,6 +281,7 @@ These advanced config options are also available:
 ### 21th April 2015
 
 * [ozdemirburak] Added `asNestedSet` function
+* [ozdemirburak] Added bower installation
 
 ### 6th October 2014
 
