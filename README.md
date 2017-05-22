@@ -138,10 +138,31 @@ The serialised JSON for the example above would be:
 ```json
 [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5,"foo":"bar"}]}]
 ```
+
+`toArray`:
+```js
+$('.dd').nestable('toArray');
+```
+Builds an array where each element looks like:
+```json
+{
+    'depth': depth',
+    'id': id,
+    'left': left,
+    'parent_id': parentId || null,
+    'right': right
+}
+```
+
+`toHierarchy`:
+```js
+$('.dd').nestable('toHierarchy');
+```
+
 `destroy`:
 You can deactivate the plugin by running
 ```js
-    $('.dd').nestable('destroy');
+$('.dd').nestable('destroy');
 ```
 
 
@@ -237,12 +258,28 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 10th April 2017
+
+* [timalennon] Added functions: `toHierarchy` and `toArray`
+
+### 17th November 2015
+
+* [oimken] Added `destroy` function
+
+### 2nd November 2015
+
+* [ivanbarlog] Added `onDragStart` event fired when user starts to drag an element
+
+### 21th April 2015
+
+* [ozdemirburak] Added `asNestedSet` function
+
 ### 6th October 2014
 
 * [zemistr] Created listRenderer and itemRenderer. Refactored build from JSON.
 * [zemistr] Added support for adding classes via input data. (```[{"id": 1, "content": "First item", "classes": ["dd-nochildren", "dd-nodrag", ...] }, ... ]```)
 
-### 3th October 2014
+### 3rd October 2014
 
 * [zemistr] Added support for additional data parameters.
 * [zemistr] Added callback for customizing content.
