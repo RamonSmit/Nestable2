@@ -5,10 +5,6 @@ Nestable
 
 ## We are writing a new readme! Till now, please continue read the source ;)
 
-## PLEASE NOTE
-
-~~I cannot provide any support or guidance beyond this README. If this code helps you that's great but I have no plans to develop Nestable beyond this demo (it's not a final product and has limited functionality). I cannot reply to any requests for help.~~.
-
 **I'm picking up active developement for Nestable! Pull requests are welcome!**
 
 * * *
@@ -18,6 +14,30 @@ Nestable
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
 Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
+
+## Install
+
+You can install this package either with `npm` or with `bower`.
+
+### npm
+
+```shell
+npm install nestable2
+```
+
+Then add a `<script>` to your `index.html`:
+
+```html
+<script src="/node_modules/nestable2/jquery.nestable.js"></script>
+```
+
+Or `require('nestable2')` from your code.
+
+### bower
+
+```shell
+bower install nestable2
+```
 
 ## Usage
 
