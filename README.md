@@ -144,9 +144,9 @@ The serialised JSON for the example above would be:
 $('.dd').nestable('toArray');
 ```
 Builds an array where each element looks like:
-```json
+```js
 {
-    'depth': depth',
+    'depth': depth,
     'id': id,
     'left': left,
     'parent_id': parentId || null,
