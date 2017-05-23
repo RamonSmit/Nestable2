@@ -225,6 +225,7 @@ p {
 <menu id="nestable-menu">
     <button type="button" data-action="expand-all">Expand All</button>
     <button type="button" data-action="collapse-all">Collapse All</button>
+    <button type="button" data-action="add-item">Add new item</button>
 </menu>
 
 <div class="cf nestable-lists">
@@ -384,6 +385,7 @@ p {
                 ]
             }
         ];
+        var lastId = 12;
 
         // activate Nestable for list 1
         $('#nestable').nestable({
@@ -414,6 +416,9 @@ p {
             }
             if(action === 'collapse-all') {
                 $('.dd').nestable('collapseAll');
+            }
+            if(action === 'add-item') {
+                $('#nestable').nestable('add', {"id": ++lastId, "content": "Item " + lastId});
             }
         });
 

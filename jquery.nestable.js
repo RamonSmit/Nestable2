@@ -214,7 +214,38 @@
             this.el.trigger('destroy-nestable');
         },
 
+        add: function (item)
+        {
+            var html = this._buildItem(item, this.options);
+            $(this.el).children('.' + this.options.listClass).append(html);
+        },
+
         _build: function() {
+            var json = this.options.json;
+
+            if(typeof json === 'string') {
+                json = JSON.parse(json);
+            }
+
+            $(this.el).html(this._buildList(json, this.options));
+        },
+
+        _buildList: function(items, options) {
+            if(!items) {
+                return '';
+            }
+
+            var children = '';
+            var that = this;
+
+            $.each(items, function(index, sub) {
+                children += that._buildItem(sub, options);
+            });
+
+            return options.listRenderer(children, options);
+        },
+
+        _buildItem: function(item, options) {
             function escapeHtml(text) {
                 var map = {
                     '&': '&amp;',
@@ -274,37 +305,13 @@
                 return data_attrs;
             }
 
-            function buildList(items, options) {
-                if(!items) {
-                    return '';
-                }
+            var item_attrs = createDataAttrs(item);
+            item_attrs["class"] = createClassesString(item, options);
 
-                var children = '';
+            var content = options.contentCallback(item);
+            var children = this._buildList(item.children, options);
 
-                $.each(items, function(index, sub) {
-                    children += buildItem(sub, options);
-                });
-
-                return options.listRenderer(children, options);
-            }
-
-            function buildItem(item, options) {
-                var item_attrs = createDataAttrs(item);
-                item_attrs["class"] = createClassesString(item, options);
-
-                var content = options.contentCallback(item);
-                var children = buildList(item.children, options);
-
-                return options.itemRenderer(item_attrs, content, children, options, item);
-            }
-
-            var json = this.options.json;
-
-            if(typeof json == 'string') {
-                json = JSON.parse(json);
-            }
-
-            $(this.el).html(buildList(json, this.options));
+            return options.itemRenderer(item_attrs, content, children, options, item);
         },
 
         serialize: function() {
@@ -438,7 +445,6 @@
                 if (item.children(o.options.listNodeName).children(o.options.itemNodeName).length > 0) {
                     depth++;
                     item.children(o.options.listNodeName).children(o.options.itemNodeName).each(function() {
-                        //console.log($(this));
                         right = _recursiveArray($(this), depth, right);
                     });
                     depth--;
@@ -822,7 +828,7 @@
 
     };
 
-    $.fn.nestable = function(params) {
+    $.fn.nestable = function(params, val) {
         var lists = this,
             retval = this;
 
@@ -842,7 +848,11 @@
             }
             else {
                 if(typeof params === 'string' && typeof plugin[params] === 'function') {
-                    retval = plugin[params]();
+                    if (typeof val !== 'undefined') {
+                        retval = plugin[params](val);
+                    }else{
+                        retval = plugin[params]();
+                    }
                 }
             }
         });
