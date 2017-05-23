@@ -1,6 +1,6 @@
 {
   "name": "nestable2",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "Drag & drop hierarchical list with mouse and touch compatibility",
   "main": "jquery.nestable.js",
   "scripts": {
@@ -34,9 +34,9 @@
       "email": "me@zemistr.eu"
     }
   ],
-  "dependencies": [
+  "dependencies": {
     "jquery": "^1.7.2"
-  ],
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/RamonSmit/Nestable/issues"
