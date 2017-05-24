@@ -163,6 +163,12 @@ The output will be like below:
 [{"id":1,"parent_id":"","depth":0,"lft":1,"rgt":2},{"id":2,"parent_id":"","depth":0,"lft":3,"rgt":4},{"id":3,"parent_id":"","depth":0,"lft":5,"rgt":10},{"id":4,"parent_id":3,"depth":1,"lft":6,"rgt":7},{"id":5,"parent_id":3,"depth":1,"lft":8,"rgt":9}]
 ```
 
+`add`:
+You can add any item by passing an object. New item will be appended to the list.
+```js
+$('.dd').nestable('add', {"id":1,"children":[{"id":4}]});
+```
+
 `destroy`:
 You can deactivate the plugin by running
 ```js
@@ -178,7 +184,7 @@ You can passed serialized JSON as an option if you like to dynamically generate 
 
 <script>
 var json = '[{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5,"foo":"bar"}]}]';
-var options = {'json': json }
+var options = {'json': json}
 $('#nestable-json').nestable(options);
 </script>
 ```
@@ -265,6 +271,7 @@ These advanced config options are also available:
 ### 22th May 2017
 
 * [pjona] Added npm installation
+* [pjona] Added `add` function
 
 ### 10th April 2017
 
