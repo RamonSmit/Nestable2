@@ -183,6 +183,13 @@ You need to remember that if you're replacing item with children's you need to p
 $('.dd').nestable('replace', {"id":1,"children":[{"id":4}]});
 ```
 
+`remove`:
+You can remove existing item by passing 'id' of this element.
+This will delete the item with all his children.
+```js
+$('.dd').nestable('remove', 1);
+```
+
 `destroy`:
 You can deactivate the plugin by running
 ```js
@@ -286,6 +293,7 @@ These advanced config options are also available:
 
 * [pjona] Function `add` support `parent_id` property
 * [pjona] Added `replace` function
+* [pjona] Added `remove` function
 
 ### 22th May 2017
 

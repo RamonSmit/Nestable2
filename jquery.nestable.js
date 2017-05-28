@@ -237,9 +237,34 @@
         {
             var html = this._buildItem(item, this.options);
 
-            $(this.el).children('.' + this.options.listClass)
-                .find('[data-id="' + item.id + '"]')
+            this._getItemById(item.id)
                 .html(html);
+        },
+
+        remove: function (itemId)
+        {
+            var options = this.options;
+            var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+
+            this._getItemById(itemId)
+                .remove();
+
+            // remove empty children lists
+            var emptyListsSelector = '.' + options.listClass + ':not(:has(*))';
+            $(this.el).find(emptyListsSelector).remove();
+
+            // remove buttons if parents do not have children
+            $(this.el).find(buttonsSelector).each(function() {
+                var siblings = $(this).siblings('.' + options.listClass);
+                if (siblings.length === 0) {
+                    $(this).remove();
+                }
+            });
+        },
+
+        _getItemById: function(itemId) {
+            return $(this.el).children('.' + this.options.listClass)
+                .find('[data-id="' + itemId + '"]');
         },
 
         _build: function() {
