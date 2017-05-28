@@ -164,9 +164,13 @@ The output will be like below:
 ```
 
 `add`:
-You can add any item by passing an object. New item will be appended to the list.
+You can add any item by passing an object. New item will be appended to the root tree.
 ```js
 $('.dd').nestable('add', {"id":1,"children":[{"id":4}]});
+```
+Optionally you can set 'parent_id' property on your object and control in which place in tree your item will be added.
+```js
+$('.dd').nestable('add', {"id":1,"parent_id":2,"children":[{"id":4}]});
 ```
 
 `destroy`:
@@ -267,6 +271,10 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
 
 ## Change Log
+
+### 28th May 2017
+
+* [pjona] Function `add` support `parent_id` property
 
 ### 22th May 2017
 

@@ -216,8 +216,21 @@
 
         add: function (item)
         {
-            var html = this._buildItem(item, this.options);
-            $(this.el).children('.' + this.options.listClass).append(html);
+            var listClassSelector = '.' + this.options.listClass;
+            var tree = $(this.el).children(listClassSelector);
+
+            if (item.parent_id !== undefined) {
+                tree = tree.find('[data-id="' + item.parent_id + '"]');
+                delete item.parent_id;
+
+                if (tree.children(listClassSelector).length === 0) {
+                    tree = tree.append(this.options.listRenderer('', this.options))
+                }
+
+                tree = tree.find(listClassSelector);
+            }
+
+            tree.append(this._buildItem(item, this.options));
         },
 
         _build: function() {
