@@ -173,6 +173,16 @@ Optionally you can set 'parent_id' property on your object and control in which 
 $('.dd').nestable('add', {"id":1,"parent_id":2,"children":[{"id":4}]});
 ```
 
+`replace`:
+You can replace existing item in tree by passing an object with 'id' property.
+```js
+$('.dd').nestable('replace', {"id":1,"foo":"bar"});
+```
+You need to remember that if you're replacing item with children's you need to pass this children's in object as well.
+```js
+$('.dd').nestable('replace', {"id":1,"children":[{"id":4}]});
+```
+
 `destroy`:
 You can deactivate the plugin by running
 ```js
@@ -275,6 +285,7 @@ These advanced config options are also available:
 ### 28th May 2017
 
 * [pjona] Function `add` support `parent_id` property
+* [pjona] Added `replace` function
 
 ### 22th May 2017
 

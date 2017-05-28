@@ -233,6 +233,15 @@
             tree.append(this._buildItem(item, this.options));
         },
 
+        replace: function (item)
+        {
+            var html = this._buildItem(item, this.options);
+
+            $(this.el).children('.' + this.options.listClass)
+                .find('[data-id="' + item.id + '"]')
+                .html(html);
+        },
+
         _build: function() {
             var json = this.options.json;
 
