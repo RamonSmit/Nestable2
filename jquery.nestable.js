@@ -169,7 +169,7 @@
             var onEndEvent = function(e) {
                 if(list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.touches[0] : e);
+                    list.dragStop(hasTouch ? e.changedTouches[0] : e);
                 }
             };
 
