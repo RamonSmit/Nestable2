@@ -83,7 +83,7 @@ $('.dd').nestable({
 });
 ```
 
-`onDragStart` callback provided as an option is fired when user starts to drag an element.
+`onDragStart` callback provided as an option is fired when user starts to drag an element. Returning `false` from this callback will disable the dragging.
 ```js
 $('.dd').nestable({
     onDragStart: function(l,e){
@@ -288,6 +288,10 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
 
 ## Change Log
+
+### 16th June 2017
+
+* [imliam] Added support to return `false` from the `onDragStart` event to disable the drag event
 
 ### 28th May 2017
 
