@@ -604,7 +604,11 @@
             position.top = e.pageY;
             position.left = e.pageX;
 
-            this.options.onDragStart.call(this, this.el, dragItem, position);
+            var continueExecution = this.options.onDragStart.call(this, this.el, dragItem, position);
+
+            if (typeof continueExecution !== 'undefined' && continueExecution === false) {
+                return;
+            }
 
             this.placeEl.css('height', dragItem.height());
 
