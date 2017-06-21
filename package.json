@@ -42,6 +42,11 @@
   "dependencies": {
     "jquery": "^1.7.2"
   },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-uglify": "^3.0.0"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/RamonSmit/Nestable2/issues"
