@@ -250,7 +250,8 @@
                 .remove();
 
             // remove empty children lists
-            var emptyListsSelector = '.' + options.listClass + ':not(:has(*))';
+            var emptyListsSelector = '.' + options.listClass
+                + ' .' + options.listClass + ':not(:has(*))';
             $(this.el).find(emptyListsSelector).remove();
 
             // remove buttons if parents do not have children
