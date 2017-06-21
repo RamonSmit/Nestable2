@@ -1,7 +1,7 @@
 /*!
  * Nestable jQuery Plugin - Copyright (c) 2014 Ramon Smit - https://github.com/RamonSmit/Nestable
  */
-;
+
 (function($, window, document, undefined) {
     var hasTouch = 'ontouchstart' in window;
 
@@ -320,7 +320,7 @@
             function createClassesString(item, options) {
                 var classes = item.classes || {};
 
-                if(typeof classes == 'string') {
+                if(typeof classes === 'string') {
                     classes = [classes];
                 }
 
@@ -343,7 +343,7 @@
                 var data_attrs = {};
 
                 $.each(attr, function(key, value) {
-                    if(typeof value == 'object') {
+                    if(typeof value === 'object') {
                         value = JSON.stringify(value);
                     }
 
@@ -665,7 +665,7 @@
             var indexArray = this.dragEl.data('indexOfItem'),
                 currentEl = this.el;
 
-            for(i = 0; i < indexArray.length; i++) {
+            for(var i = 0; i < indexArray.length; i++) {
                 if((indexArray.length - 1) === parseInt(i)) {
                     placeElement(currentEl, dragElement);
                     return

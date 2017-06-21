@@ -1,0 +1,12 @@
+{
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-unused-vars": "off"
+    },
+    "env": {
+        "browser": true
+    },
+    "globals": {
+        "Nestable": true
+    }
+}
