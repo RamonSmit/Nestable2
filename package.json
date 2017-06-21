@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/RamonSmit/Nestable.git"
+    "url": "git://github.com/RamonSmit/Nestable2.git"
   },
   "keywords": [
     "jquery",
@@ -16,6 +16,7 @@
     "list",
     "sortable",
     "nestable",
+    "nestable2",
     "drag",
     "drop"
   ],
@@ -39,7 +40,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RamonSmit/Nestable/issues"
+    "url": "https://github.com/RamonSmit/Nestable2/issues"
   },
-  "homepage": "https://github.com/RamonSmit/Nestable#readme"
+  "homepage": "https://github.com/RamonSmit/Nestable2#readme"
 }

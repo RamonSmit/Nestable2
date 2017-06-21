@@ -1,7 +1,7 @@
 {
   "name": "nestable2",
   "version": "1.2.9",
-  "homepage": "https://github.com/RamonSmit/Nestable",
+  "homepage": "https://github.com/RamonSmit/Nestable2",
   "authors": [
     "Ramon Smit <@_RamonSmit>",
     "David Bushell <@dbushell>"
@@ -14,6 +14,7 @@
     "list",
     "sortable",
     "nestable",
+    "nestable2",
     "drag",
     "drop"
   ],
