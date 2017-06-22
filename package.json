@@ -44,8 +44,8 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.4.2",
     "gulp-eslint": "^4.0.0",
-    "gulp-minify-css": "^1.2.4",
     "gulp-uglify": "^3.0.0"
   },
   "license": "MIT",

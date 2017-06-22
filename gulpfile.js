@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const uglify = require("gulp-uglify");
-const minifyCss = require("gulp-minify-css");
+const cleanCss = require("gulp-clean-css");
 const eslint = require("gulp-eslint");
 
 const file = 'jquery.nestable';
@@ -11,7 +11,7 @@ gulp.task('default', function () {
         .pipe(gulp.dest('dist/' + file + '.min.js'));
 
     gulp.src(file + '.css')
-        .pipe(minifyCss())
+        .pipe(cleanCss())
         .pipe(gulp.dest('dist/' + file + '.min.css'));
 });
 
