@@ -3,7 +3,9 @@ Nestable2 - new pickup of Nestable!
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
-[**Try Nestable2 Demo**](http://ramonsmit.github.com/Nestable2/)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://ramonsmit.github.com/Nestable2/)
+[![License](https://img.shields.io/npm/l/nestable2.svg?style=flat-square)](https://github.com/RamonSmit/Nestable2/blob/master/LICENSE)
+[![Release](https://img.shields.io/npm/v/nestable2.svg?style=flat-square)](https://www.npmjs.com/package/nestable2)
 
 Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
 
@@ -277,7 +279,7 @@ These advanced config options are also available:
 * `itemRenderer` The callback for customizing final item output (default `function(item_attrs, content, children, options) { ... }` - see defaults in code)
 * `json` JSON string used to dynamically generate a Nestable list. This is the same format as the `serialize()` output
 
-**Inspect the [Nestable2 Demo](http://ramonsmit.github.io/Nestable2/) for guidance.**
+**Inspect the [Nestable2 Demo](https://ramonsmit.github.io/Nestable2/) for guidance.**
 
 ## Change Log
 
