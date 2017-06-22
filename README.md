@@ -284,6 +284,13 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 22th June 2017
+* [pjona] Added Travis CI builds after each commit and pull request
+* [pjona] Added `test` task in gulp with eslint validation
+* [pjona] Added minified version of JS and CSS
+* [pjona] Changed project name to `nestable2`
+* [pjona] Fixed `remove` method when removing last item from the list
+
 ### 16th June 2017
 
 * [imliam] Added support to return `false` from the `onDragStart` event to disable the drag event
