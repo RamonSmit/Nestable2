@@ -228,6 +228,7 @@
                 }
 
                 tree = tree.find(listClassSelector);
+                this.setParent(tree.parent());
             }
 
             tree.append(this._buildItem(item, this.options));
