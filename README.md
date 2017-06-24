@@ -1,17 +1,12 @@
-
-
-Nestable
+Nestable2 - new pickup of Nestable!
 ========
-
-## We are writing a new readme! Till now, please continue read the source ;)
-
-**I'm picking up active developement for Nestable! Pull requests are welcome!**
-
-* * *
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
-[**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://ramonsmit.github.com/Nestable2/)
+[![Build Status](https://travis-ci.org/RamonSmit/Nestable2.svg)](https://travis-ci.org/RamonSmit/Nestable2)
+[![License](https://img.shields.io/npm/l/nestable2.svg?style=flat-square)](https://github.com/RamonSmit/Nestable2/blob/master/LICENSE)
+[![Release](https://img.shields.io/npm/v/nestable2.svg?style=flat-square)](https://www.npmjs.com/package/nestable2)
 
 Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
 
@@ -83,7 +78,7 @@ $('.dd').nestable({
 });
 ```
 
-`onDragStart` callback provided as an option is fired when user starts to drag an element.
+`onDragStart` callback provided as an option is fired when user starts to drag an element. Returning `false` from this callback will disable the dragging.
 ```js
 $('.dd').nestable({
     onDragStart: function(l,e){
@@ -285,9 +280,20 @@ These advanced config options are also available:
 * `itemRenderer` The callback for customizing final item output (default `function(item_attrs, content, children, options) { ... }` - see defaults in code)
 * `json` JSON string used to dynamically generate a Nestable list. This is the same format as the `serialize()` output
 
-**Inspect the [Nestable Demo](http://ramonsmit.github.io/Nestable/) for guidance.**
+**Inspect the [Nestable2 Demo](https://ramonsmit.github.io/Nestable2/) for guidance.**
 
 ## Change Log
+
+### 22th June 2017
+* [pjona] Added Travis CI builds after each commit and pull request
+* [pjona] Added `test` task in gulp with eslint validation
+* [pjona] Added minified version of JS and CSS
+* [pjona] Changed project name to `nestable2`
+* [pjona] Fixed `remove` method when removing last item from the list
+
+### 16th June 2017
+
+* [imliam] Added support to return `false` from the `onDragStart` event to disable the drag event
 
 ### 28th May 2017
 
@@ -368,11 +374,12 @@ These advanced config options are also available:
 
 Original Author: David Bushell [http://dbushell.com](http://dbushell.com/) [@dbushell](http://twitter.com/dbushell/)
 
-New Author     : Ramon Smit    [http://ramonsmit.nl](http://ramonsmit.nl) [@Ram0nSm1t](https://twitter.com/Ram0nSm1t/)
+New Author     : Ramon Smit    [http://ramonsmit.nl](http://ramonsmit.nl) [@ramonsmit94](https://twitter.com/Ram0nSm1t/)
 
 Contributors :
 
 * Cyril [http://tchap.me](http://tchap.me), Craig Sansam
 * Zemistr [http://zemistr.eu](http://zemistr.eu), Martin Zeman
+* And alot more. 
 
-Copyright © 2012 David Bushell / © Ramon Smit 2014 | BSD & MIT license
+Copyright © 2012 David Bushell / © Ramon Smit 2014/2017 | BSD & MIT license
