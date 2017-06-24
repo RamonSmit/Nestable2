@@ -284,6 +284,9 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 25th June 2017
+* [pjona] Fixed `add` method when using parent_id, see [#66](https://github.com/RamonSmit/Nestable2/issues/66)
+
 ### 22th June 2017
 * [pjona] Added Travis CI builds after each commit and pull request
 * [pjona] Added `test` task in gulp with eslint validation
