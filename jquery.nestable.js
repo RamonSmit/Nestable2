@@ -56,6 +56,7 @@
         includeContent: false,
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
+        beforeDragStop: function(l, e, p) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
             html += children;
@@ -662,42 +663,59 @@
             }
         },
 
-        restoreItemAtIndex: function(dragElement) {
-            var indexArray = this.dragEl.data('indexOfItem'),
-                currentEl = this.el;
+        restoreItemAtIndex: function(dragElement, indexArray) {
+            var currentEl = this.el,
+                lastIndex = indexArray.length - 1;
 
-            for(var i = 0; i < indexArray.length; i++) {
-                if((indexArray.length - 1) === parseInt(i)) {
-                    placeElement(currentEl, dragElement);
-                    return
-                }
-                currentEl = currentEl[0].children[indexArray[i]];
-            }
-
+            //Put drag elemnt at current element position.
             function placeElement(currentEl, dragElement) {
-                if(indexArray[indexArray.length - 1] === 0) {
+                if(indexArray[lastIndex] === 0) {
                     $(currentEl).prepend(dragElement.clone());
+                } else {
+                    $(currentEl.children[indexArray[lastIndex] - 1]).after(dragElement.clone());
                 }
-                else {
-                    $(currentEl.children[indexArray[indexArray.length - 1] - 1]).after(dragElement.clone());
+            }
+            //Diggin through indexArray to get home for dragElement.
+            for(var i = 0; i < indexArray.length; i++) {
+                if(lastIndex === parseInt(i)) {
+                    placeElement(currentEl, dragElement);
+                    return;
                 }
+                //element can have no indexes, so we have to use conditional here to avoid errors.
+                currentEl = (currentEl[0]) ? currentEl[0].children[indexArray[i]] : currentEl.children[indexArray[i]];
             }
         },
 
         dragStop: function(e) {
             // fix for zepto.js
             //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
+            var position = {
+              top  : e.pageY,
+              left : e.pageX
+            };
+            //Get indexArray of item at drag start.
+            var srcIndex = this.dragEl.data('indexOfItem');
+            
             var el = this.dragEl.children(this.options.itemNodeName).first();
+            
             el[0].parentNode.removeChild(el[0]);
-            this.placeEl.replaceWith(el);
 
-            var position = {};
-            position.top = e.pageY;
-            position.left = e.pageX;
+            this.dragEl.remove(); //Remove dragEl, cause it can affect on indexing in html collection.
+            
+            //Before drag stop callback
+            var continueExecution = this.options.beforeDragStop.call(this, this.el, el, this.placeEl.parent());
+            if (typeof continueExecution !== 'undefined' && continueExecution === false) {
+                this.placeEl.remove();
+                this.restoreItemAtIndex(el, srcIndex);
+                this.reset();
+                return;
+            }
+            
+            this.placeEl.replaceWith(el);
 
             if(this.hasNewRoot) {
                 if(this.options.fixed === true) {
-                    this.restoreItemAtIndex(el);
+                    this.restoreItemAtIndex(el, srcIndex);
                 }
                 else {
                     this.el.trigger('lostItem');
@@ -708,7 +726,6 @@
                 this.dragRootEl.trigger('change');
             }
 
-            this.dragEl.remove();
             this.options.callback.call(this, this.dragRootEl, el, position);
 
             this.reset();
