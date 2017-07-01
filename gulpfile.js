@@ -2,17 +2,20 @@ const gulp = require('gulp');
 const uglify = require("gulp-uglify");
 const cleanCss = require("gulp-clean-css");
 const eslint = require("gulp-eslint");
+const rename = require("gulp-rename");
 
 const file = 'jquery.nestable';
 
 gulp.task('default', function () {
     gulp.src(file + '.js')
         .pipe(uglify())
-        .pipe(gulp.dest('dist/' + file + '.min.js'));
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('dist/'));
 
     gulp.src(file + '.css')
         .pipe(cleanCss())
-        .pipe(gulp.dest('dist/' + file + '.min.css'));
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('dist/'));
 });
 
 
