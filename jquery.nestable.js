@@ -648,6 +648,17 @@
             }
         },
 
+        //Create sublevel.
+        //  element : element which become parent
+        //  item    : something to place into new sublevel
+        createSubLevel: function(element, item) {
+            list = $('<' + this.options.listNodeName + '/>').addClass(this.options.listClass);
+            if(item) list.append(item);
+            element.append(list);
+            this.setParent(element);
+            return list;
+        },
+
         setIndexOfItem: function(item, index) {
             if((typeof index) === 'undefined') {
                 index = [];
@@ -682,7 +693,11 @@
                     return;
                 }
                 //element can have no indexes, so we have to use conditional here to avoid errors.
-                currentEl = (currentEl[0]) ? currentEl[0].children[indexArray[i]] : currentEl.children[indexArray[i]];
+                //element can have no indexes, so we have to use conditional here to avoid errors.
+                //if element doesn't exist we defenetly need to add new list.
+                var element = (currentEl[0]) ? currentEl[0] : currentEl;
+                var nextEl  = element.children[indexArray[i]];
+                currentEl   = (!nextEl) ? this.createSubLevel($(element)) : nextEl;
             }
         },
 
@@ -799,10 +814,7 @@
                     if(depth + this.dragDepth <= opt.maxDepth) {
                         // create new sub-level if one doesn't exist
                         if(!list.length) {
-                            list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
-                            list.append(this.placeEl);
-                            prev.append(list);
-                            this.setParent(prev);
+                            this.createSubLevel(prev, this.placeEl);
                         }
                         else {
                             // else append to next level up
