@@ -720,7 +720,11 @@
             //Before drag stop callback
             var continueExecution = this.options.beforeDragStop.call(this, this.el, el, this.placeEl.parent());
             if (typeof continueExecution !== 'undefined' && continueExecution === false) {
+                var parent = this.placeEl.parent();
                 this.placeEl.remove();
+                if(!parent.children().length) {
+                    this.unsetParent(parent.parent());
+                }
                 this.restoreItemAtIndex(el, srcIndex);
                 this.reset();
                 return;
