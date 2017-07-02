@@ -34,6 +34,15 @@ Or `require('nestable2')` from your code.
 bower install --save nestable2
 ```
 
+### CDN
+
+You can also find us on [CDNJS](https://cdnjs.com/libraries/nestable2):
+
+```
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.3.1/jquery.nestable.min.css
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.3.1/jquery.nestable.min.js
+```
+
 ## Usage
 
 Write your nested HTML lists like so:
@@ -283,6 +292,10 @@ These advanced config options are also available:
 **Inspect the [Nestable2 Demo](https://ramonsmit.github.io/Nestable2/) for guidance.**
 
 ## Change Log
+
+### 2nd July 2017
+* [pjona] Added CDN support
+* [pjona] Removed unneeded directories in `dist/`
 
 ### 25th June 2017
 * [pjona] Fixed `add` method when using parent_id, see [#66](https://github.com/RamonSmit/Nestable2/issues/66)
