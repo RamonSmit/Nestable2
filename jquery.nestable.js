@@ -652,7 +652,7 @@
         //  element : element which become parent
         //  item    : something to place into new sublevel
         createSubLevel: function(element, item) {
-            list = $('<' + this.options.listNodeName + '/>').addClass(this.options.listClass);
+            var list = $('<' + this.options.listNodeName + '/>').addClass(this.options.listClass);
             if(item) list.append(item);
             element.append(list);
             this.setParent(element);
