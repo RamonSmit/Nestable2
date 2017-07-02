@@ -584,7 +584,8 @@
         },
 
         setParent: function(li) {
-            if(li.children(this.options.listNodeName).length) {
+            //Check if li is an element of itemNodeName type and has children
+            if(li.is(this.options.itemNodeName) && li.children(this.options.listNodeName).length) {
                 // make sure NOT showing two or more sets data-action buttons
                 li.children('[data-action]').remove();
                 li.prepend($(this.options.expandBtnHTML));
