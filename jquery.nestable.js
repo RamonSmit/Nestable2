@@ -694,7 +694,6 @@
                     return;
                 }
                 //element can have no indexes, so we have to use conditional here to avoid errors.
-                //element can have no indexes, so we have to use conditional here to avoid errors.
                 //if element doesn't exist we defenetly need to add new list.
                 var element = (currentEl[0]) ? currentEl[0] : currentEl;
                 var nextEl  = element.children[indexArray[i]];
