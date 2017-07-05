@@ -130,6 +130,17 @@ some other elements for instance based on `data-type` of current element and oth
      }
  });
  ```
+`beforeDragStop` callback provided as an option is fired when user drop an element and before 'callback' method fired. Returning false from this callback will disable the dropping and restore element at start position.
+
+```js
+$('.dd').nestable({
+    beforeDragStop: function(l,e, p){
+        // l is the main container
+        // e is the element that was moved
+        // p is the place where element was moved.
+    }
+});
+```
 
 ### Methods
 
