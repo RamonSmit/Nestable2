@@ -911,7 +911,7 @@
 
     };
 
-    $.fn.nestable = function(params, val) {
+    $.fn.nestable = function(params) {
         var lists  = this,
             retval = this,
             args   = arguments;
