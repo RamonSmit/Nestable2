@@ -191,9 +191,14 @@ $('.dd').nestable('replace', {"id":1,"children":[{"id":4}]});
 
 `remove`:
 You can remove existing item by passing 'id' of this element.
+You also can add 'fade' parameter to fadeOut element before removing.
 This will delete the item with all his children.
 ```js
 $('.dd').nestable('remove', 1);
+```
+This will fadeOut the item and his children and then delete the item with all his children.
+```js
+$('.dd').nestable('remove', 1, 'fade');
 ```
 
 `destroy`:
