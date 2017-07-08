@@ -242,31 +242,42 @@
                 .html(html);
         },
 
-        remove: function (itemId)
+        //use fade = 'fade' to fadeout item before removing.
+        remove: function (itemId, fade)
         {
-            var options = this.options;
-            var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+            var opts = this.options,
+                el   = this.el,
+                item = this._getItemById(itemId)
 
-            this._getItemById(itemId)
-                .remove();
+            //removes item and additional elements from list
+            function removeItem(item){
 
-            // remove empty children lists
-            var emptyListsSelector = '.' + options.listClass
-                + ' .' + options.listClass + ':not(:has(*))';
-            $(this.el).find(emptyListsSelector).remove();
+                // remove item
+                item = item || this;
+                item.remove();
 
-            // remove buttons if parents do not have children
-            $(this.el).find(buttonsSelector).each(function() {
-                var siblings = $(this).siblings('.' + options.listClass);
-                if (siblings.length === 0) {
-                    $(this).remove();
-                }
-            });
-        },
+                // remove empty children lists
+                var emptyListsSelector = '.' + opts.listClass
+                    + ' .' + opts.listClass + ':not(:has(*))';
+                $(el).find(emptyListsSelector).remove();
 
-        _getItemById: function(itemId) {
-            return $(this.el).children('.' + this.options.listClass)
-                .find('[data-id="' + itemId + '"]');
+                // remove buttons if parents do not have children
+                var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+                $(el).find(buttonsSelector).each(function() {
+                    var siblings = $(this).siblings('.' + opts.listClass);
+                    if (siblings.length === 0) {
+                        $(this).remove();
+                    }
+                });                
+            }
+
+            //Setting fade to true, adds fadeOut effect to removing.
+            if(fade === 'fade'){
+                item.fadeOut('slow', removeItem);
+            }
+            else {
+                removeItem(item);
+            }
         },
 
         _build: function() {
