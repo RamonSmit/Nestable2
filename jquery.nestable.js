@@ -24,9 +24,9 @@
         return !!supports;
     })();
 
-    var eStart = hasTouch ? 'touchstart' : 'mousedown',
-        eMove = hasTouch ? 'touchmove' : 'mousemove',
-        eEnd = hasTouch ? 'touchend' : 'mouseup',
+    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
+        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
+        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
@@ -83,21 +83,20 @@
     };
 
     function Plugin(element, options) {
-        this.w = $(document);
+        this.w  = $(document);
         this.el = $(element);
-        if(!options) {
-            options = defaults;
-        }
+        options = options || defaults;
+
         if(options.rootClass !== undefined && options.rootClass !== 'dd') {
-            options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
-            options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
-            options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
-            options.handleClass = options.handleClass ? options.handleClass : options.rootClass + '-handle';
-            options.collapsedClass = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
-            options.placeClass = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
-            options.noDragClass = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
+            options.listClass       = options.listClass ? options.listClass : options.rootClass + '-list';
+            options.itemClass       = options.itemClass ? options.itemClass : options.rootClass + '-item';
+            options.dragClass       = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
+            options.handleClass     = options.handleClass ? options.handleClass : options.rootClass + '-handle';
+            options.collapsedClass  = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
+            options.placeClass      = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
+            options.noDragClass     = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
             options.noChildrenClass = options.noChildrenClass ? options.noChildrenClass : options.rootClass + '-nochildren';
-            options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
+            options.emptyClass      = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
         }
 
         this.options = $.extend({}, defaults, options);
@@ -661,9 +660,7 @@
         },
 
         setIndexOfItem: function(item, index) {
-            if((typeof index) === 'undefined') {
-                index = [];
-            }
+            index = index || [];
 
             index.unshift(item.index());
 
@@ -915,8 +912,9 @@
     };
 
     $.fn.nestable = function(params, val) {
-        var lists = this,
-            retval = this;
+        var lists  = this,
+            retval = this,
+            args   = arguments;
 
         if(!('Nestable' in window)) {
             window.Nestable = {};
@@ -930,13 +928,17 @@
                 Nestable.counter++;
                 $(this).data("nestable", new Plugin(this, params));
                 $(this).data("nestable-id", Nestable.counter);
-
             }
             else {
                 if(typeof params === 'string' && typeof plugin[params] === 'function') {
-                    if (typeof val !== 'undefined') {
-                        retval = plugin[params](val);
-                    }else{
+                    if(args.length > 1){
+                        var pluginArgs = [];
+                        for (var i = 1; i < args.length; i++) {
+                          pluginArgs.push(args[i]);
+                        }
+                        retval = plugin[params].apply(plugin, pluginArgs);
+                    }
+                    else {
                         retval = plugin[params]();
                     }
                 }
