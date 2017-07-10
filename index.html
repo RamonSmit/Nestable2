@@ -223,6 +223,7 @@
     <button type="button" data-action="expand-all">Expand All</button>
     <button type="button" data-action="collapse-all">Collapse All</button>
     <button type="button" data-action="add-item">Add new item</button>
+    <button type="button" data-action="replace-item">Replace item 10</button>
 </menu>
 
 <div class="cf nestable-lists">
@@ -415,7 +416,42 @@
                 $('.dd').nestable('collapseAll');
             }
             if(action === 'add-item') {
-                $('#nestable').nestable('add', {"id": ++lastId, "content": "Item " + lastId});
+                var newItem = {
+                    "id": ++lastId,
+                    "content": "Item " + lastId,
+                    "children": [
+                        {
+                            "id": ++lastId,
+                            "content": "Item " + lastId,
+                            "children": [
+                                {
+                                    "id": ++lastId,
+                                    "content": "Item " + lastId
+                                }
+                            ]
+                        }
+                    ]
+                };
+                $('#nestable').nestable('add', newItem);
+            }
+            if(action === 'replace-item') {
+                var replacedItem = {
+                    "id": 10,
+                    "content": "New item 10",
+                    "children": [
+                        {
+                            "id": ++lastId,
+                            "content": "Item " + lastId,
+                            "children": [
+                                {
+                                    "id": ++lastId,
+                                    "content": "Item " + lastId
+                                }
+                            ]
+                        }
+                    ]
+                };
+                $('#nestable').nestable('replace', replacedItem);
             }
         });
 
