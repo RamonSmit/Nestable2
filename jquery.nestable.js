@@ -240,7 +240,7 @@
             var html = this._buildItem(item, this.options);
 
             this._getItemById(item.id)
-                .html(html);
+                .replaceWith(html);
         },
 
         remove: function (itemId)
@@ -360,8 +360,11 @@
 
             var content = options.contentCallback(item);
             var children = this._buildList(item.children, options);
+            var html = $(options.itemRenderer(item_attrs, content, children, options, item));
 
-            return options.itemRenderer(item_attrs, content, children, options, item);
+            this.setParent(html);
+
+            return html[0].outerHTML;
         },
 
         serialize: function() {
@@ -433,7 +436,7 @@
         serialise: function() {
             return this.serialize();
         },
-        
+
         toHierarchy: function(options) {
 
             var o = $.extend({}, this.options, options),
@@ -710,13 +713,13 @@
             };
             //Get indexArray of item at drag start.
             var srcIndex = this.dragEl.data('indexOfItem');
-            
+
             var el = this.dragEl.children(this.options.itemNodeName).first();
-            
+
             el[0].parentNode.removeChild(el[0]);
 
             this.dragEl.remove(); //Remove dragEl, cause it can affect on indexing in html collection.
-            
+
             //Before drag stop callback
             var continueExecution = this.options.beforeDragStop.call(this, this.el, el, this.placeEl.parent());
             if (typeof continueExecution !== 'undefined' && continueExecution === false) {
@@ -729,7 +732,7 @@
                 this.reset();
                 return;
             }
-            
+
             this.placeEl.replaceWith(el);
 
             if(this.hasNewRoot) {
