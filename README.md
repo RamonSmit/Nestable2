@@ -197,8 +197,10 @@ This will delete the item with all his children.
 $('.dd').nestable('remove', 1);
 ```
 This will fadeOut the item and his children and then delete the item with all his children.
+Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
+Default value for time is 'slow'.
 ```js
-$('.dd').nestable('remove', 1, 'fade');
+$('.dd').nestable('remove', 1, 'fade', time);
 ```
 
 `destroy`:
