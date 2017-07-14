@@ -243,11 +243,15 @@
         },
 
         //use fade = 'fade' to fadeout item before removing.
-        remove: function (itemId, fade)
+        //by using time(string/msecs), you can control animation speed, default is jq 'slow'
+        remove: function (itemId, fade, time)
         {
             var opts = this.options,
                 el   = this.el,
                 item = this._getItemById(itemId)
+
+            //animation time
+            time = time || 'slow';
 
             //removes item and additional elements from list
             function removeItem(item){
@@ -273,11 +277,16 @@
 
             //Setting fade to true, adds fadeOut effect to removing.
             if(fade === 'fade'){
-                item.fadeOut('slow', removeItem);
+                item.fadeOut(time, removeItem);
             }
             else {
                 removeItem(item);
             }
+        },
+
+        _getItemById: function(itemId) {
+            return $(this.el).children('.' + this.options.listClass)
+                .find('[data-id="' + itemId + '"]');
         },
 
         _build: function() {
