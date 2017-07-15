@@ -326,6 +326,11 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 15th July 2017
+* [RomanBurunkov] Added fadeOut support to `remove` method
+* [pjona] Fixed `replace` method (added collapse/expand buttons when item has children), see [#69](https://github.com/RamonSmit/Nestable2/issues/69)
+* [uniring] Added autoscroll while dragging, see [#71](https://github.com/RamonSmit/Nestable2/issues/71)
+
 ### 2nd July 2017
 * [pjona] Added CDN support
 * [pjona] Removed unneeded directories in `dist/`
