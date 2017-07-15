@@ -1,8 +1,12 @@
 {
     "extends": "eslint:recommended",
     "rules": {
-        "no-unused-vars": "off",
-        "no-console": ["error", { "allow": ["warn"] }]
+        "no-unused-vars": ["error", { "args": "none" }],
+        "no-console": ["error", { "allow": ["warn"] }],
+        "keyword-spacing": "error",
+        "no-tabs": "error",
+        "semi": "error",
+        "no-trailing-spaces": "error"
     },
     "env": {
         "browser": true
