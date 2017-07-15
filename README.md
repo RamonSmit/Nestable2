@@ -217,7 +217,18 @@ You can deactivate the plugin by running
 ```js
 $('.dd').nestable('destroy');
 ```
+### Autoscroll while dragging
+Autoscrolls the container element while dragging if you drag the element over the offsets defined in `scrollTriggers` config option.
 
+```js
+$('.dd').nestable({ scroll: true });
+```
+
+To use this feature you need to have `jQuery >= 1.9` and `scrollParent()` method.
+You can be find this method in `jQuery UI` or if you don't want to have `jQuery UI` as a dependency you can use [this repository](https://github.com/slindberg/jquery-scrollparent).
+
+
+You can also control the scroll sensitivity and speed, check `scrollSensitivity` and `scrollSpeed` options.
 
 ### On the fly nestable generation
 
@@ -284,6 +295,10 @@ You can change the follow options:
 * `maxDepth` number of levels an item can be nested (default `5`)
 * `group` group ID to allow dragging between lists (default `0`)
 * `callback` callback function when an element has been changed (default `null`)
+* `scroll` enable or disable the scrolling behaviour (default: `false`)
+* `scrollSensitivity` mouse movement needed to trigger the scroll (default: `1`)
+* `scrollSpeed` speed of the scroll (default: `5`)
+* `scrollTriggers` distance from the border where scrolling become active (default: `{ top: 40, left: 40, right: -40, bottom: -40 }`)
 
 These advanced config options are also available:
 

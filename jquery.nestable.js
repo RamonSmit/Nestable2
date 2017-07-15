@@ -54,6 +54,15 @@
         fixedDepth: false, //fixed item's depth
         fixed: false,
         includeContent: false,
+        scroll: false,
+        scrollSensitivity: 1,
+        scrollSpeed: 5,
+        scrollTriggers: {
+            top: 40,
+            left: 40,
+            right: -40,
+            bottom: -40
+        },
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
@@ -248,13 +257,13 @@
         {
             var opts = this.options,
                 el   = this.el,
-                item = this._getItemById(itemId)
+                item = this._getItemById(itemId);
 
             //animation time
             time = time || 'slow';
 
             //removes item and additional elements from list
-            function removeItem(item){
+            function removeItem(item) {
 
                 // remove item
                 item = item || this;
@@ -272,11 +281,11 @@
                     if (siblings.length === 0) {
                         $(this).remove();
                     }
-                });                
+                });
             }
 
             //Setting fade to true, adds fadeOut effect to removing.
-            if(fade === 'fade'){
+            if (fade === 'fade') {
                 item.fadeOut(time, removeItem);
             }
             else {
@@ -699,7 +708,7 @@
             var currentEl = this.el,
                 lastIndex = indexArray.length - 1;
 
-            //Put drag elemnt at current element position.
+            //Put drag element at current element position.
             function placeElement(currentEl, dragElement) {
                 if(indexArray[lastIndex] === 0) {
                     $(currentEl).prepend(dragElement.clone());
@@ -725,8 +734,8 @@
             // fix for zepto.js
             //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
             var position = {
-              top  : e.pageY,
-              left : e.pageX
+                top  : e.pageY,
+                left : e.pageX
             };
             //Get indexArray of item at drag start.
             var srcIndex = this.dragEl.data('indexOfItem');
@@ -803,6 +812,47 @@
                 mouse.dirAx = newAx;
                 mouse.moving = true;
                 return;
+            }
+
+            // do scrolling if enable
+            if (opt.scroll) {
+                if (typeof jQuery.fn.scrollParent !== 'undefined') {
+                    var scrolled = false;
+                    var scrollParent = this.el.scrollParent()[0];
+                    if (scrollParent !== document && scrollParent.tagName !== 'HTML') {
+                        if ((opt.scrollTriggers.bottom + scrollParent.offsetHeight) - e.pageY < opt.scrollSensitivity)
+                            scrollParent.scrollTop = scrolled = scrollParent.scrollTop + opt.scrollSpeed;
+                        else if (e.pageY - opt.scrollTriggers.top < opt.scrollSensitivity)
+                            scrollParent.scrollTop = scrolled = scrollParent.scrollTop - opt.scrollSpeed;
+
+                        if ((opt.scrollTriggers.right + scrollParent.offsetWidth) - e.pageX < opt.scrollSensitivity)
+                            scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft + opt.scrollSpeed;
+                        else if (e.pageX - opt.scrollTriggers.left < opt.scrollSensitivity)
+                            scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft - opt.scrollSpeed;
+                    } else {
+                        if (e.pageY - $(document).scrollTop() < opt.scrollSensitivity)
+                            scrolled = $(document).scrollTop($(document).scrollTop() - opt.scrollSpeed);
+                        else if($(window).height() - (e.pageY - $(document).scrollTop()) < opt.scrollSensitivity)
+                            scrolled = $(document).scrollTop($(document).scrollTop() + opt.scrollSpeed);
+
+                        if (e.pageX - $(document).scrollLeft() < opt.scrollSensitivity)
+                            scrolled = $(document).scrollLeft($(document).scrollLeft() - opt.scrollSpeed);
+                        else if ($(window).width() - (e.pageX - $(document).scrollLeft()) < opt.scrollSensitivity)
+                            scrolled = $(document).scrollLeft($(document).scrollLeft() + opt.scrollSpeed);
+                    }
+                } else {
+                    console.warn('To use scrolling you need to have scrollParent() function, check documentation for more information');
+                }
+            }
+
+            if (this.scrollTimer) {
+                clearTimeout(this.scrollTimer);
+            }
+
+            if (opt.scroll && scrolled) {
+                this.scrollTimer = setTimeout(function() {
+                    $(window).trigger(e);
+                }, 10);
             }
 
             // calc distance moved on this axis (and direction)
@@ -957,7 +1007,7 @@
                     if(args.length > 1){
                         var pluginArgs = [];
                         for (var i = 1; i < args.length; i++) {
-                          pluginArgs.push(args[i]);
+                            pluginArgs.push(args[i]);
                         }
                         retval = plugin[params].apply(plugin, pluginArgs);
                     }
