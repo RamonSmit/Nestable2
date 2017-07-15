@@ -816,7 +816,7 @@
 
             // do scrolling if enable
             if (opt.scroll) {
-                if (typeof jQuery.fn.scrollParent !== 'undefined') {
+                if (typeof window.jQuery.fn.scrollParent !== 'undefined') {
                     var scrolled = false;
                     var scrollParent = this.el.scrollParent()[0];
                     if (scrollParent !== document && scrollParent.tagName !== 'HTML') {

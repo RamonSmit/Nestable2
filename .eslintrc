@@ -1,7 +1,8 @@
 {
     "extends": "eslint:recommended",
     "rules": {
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "no-console": ["error", { "allow": ["warn"] }]
     },
     "env": {
         "browser": true
