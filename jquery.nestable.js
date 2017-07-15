@@ -24,9 +24,9 @@
         return !!supports;
     })();
 
-    var eStart = hasTouch ? 'touchstart' : 'mousedown',
-        eMove = hasTouch ? 'touchmove' : 'mousemove',
-        eEnd = hasTouch ? 'touchend' : 'mouseup',
+    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
+        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
+        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
@@ -83,21 +83,20 @@
     };
 
     function Plugin(element, options) {
-        this.w = $(document);
+        this.w  = $(document);
         this.el = $(element);
-        if(!options) {
-            options = defaults;
-        }
+        options = options || defaults;
+
         if(options.rootClass !== undefined && options.rootClass !== 'dd') {
-            options.listClass = options.listClass ? options.listClass : options.rootClass + '-list';
-            options.itemClass = options.itemClass ? options.itemClass : options.rootClass + '-item';
-            options.dragClass = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
-            options.handleClass = options.handleClass ? options.handleClass : options.rootClass + '-handle';
-            options.collapsedClass = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
-            options.placeClass = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
-            options.noDragClass = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
+            options.listClass       = options.listClass ? options.listClass : options.rootClass + '-list';
+            options.itemClass       = options.itemClass ? options.itemClass : options.rootClass + '-item';
+            options.dragClass       = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
+            options.handleClass     = options.handleClass ? options.handleClass : options.rootClass + '-handle';
+            options.collapsedClass  = options.collapsedClass ? options.collapsedClass : options.rootClass + '-collapsed';
+            options.placeClass      = options.placeClass ? options.placeClass : options.rootClass + '-placeholder';
+            options.noDragClass     = options.noDragClass ? options.noDragClass : options.rootClass + '-nodrag';
             options.noChildrenClass = options.noChildrenClass ? options.noChildrenClass : options.rootClass + '-nochildren';
-            options.emptyClass = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
+            options.emptyClass      = options.emptyClass ? options.emptyClass : options.rootClass + '-empty';
         }
 
         this.options = $.extend({}, defaults, options);
@@ -243,26 +242,46 @@
                 .replaceWith(html);
         },
 
-        remove: function (itemId)
+        //use fade = 'fade' to fadeout item before removing.
+        //by using time(string/msecs), you can control animation speed, default is jq 'slow'
+        remove: function (itemId, fade, time)
         {
-            var options = this.options;
-            var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+            var opts = this.options,
+                el   = this.el,
+                item = this._getItemById(itemId)
 
-            this._getItemById(itemId)
-                .remove();
+            //animation time
+            time = time || 'slow';
 
-            // remove empty children lists
-            var emptyListsSelector = '.' + options.listClass
-                + ' .' + options.listClass + ':not(:has(*))';
-            $(this.el).find(emptyListsSelector).remove();
+            //removes item and additional elements from list
+            function removeItem(item){
 
-            // remove buttons if parents do not have children
-            $(this.el).find(buttonsSelector).each(function() {
-                var siblings = $(this).siblings('.' + options.listClass);
-                if (siblings.length === 0) {
-                    $(this).remove();
-                }
-            });
+                // remove item
+                item = item || this;
+                item.remove();
+
+                // remove empty children lists
+                var emptyListsSelector = '.' + opts.listClass
+                    + ' .' + opts.listClass + ':not(:has(*))';
+                $(el).find(emptyListsSelector).remove();
+
+                // remove buttons if parents do not have children
+                var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+                $(el).find(buttonsSelector).each(function() {
+                    var siblings = $(this).siblings('.' + opts.listClass);
+                    if (siblings.length === 0) {
+                        $(this).remove();
+                    }
+                });                
+            }
+
+            //Setting fade to true, adds fadeOut effect to removing.
+            if(fade === 'fade'){
+                item.fadeOut(time, removeItem);
+            }
+            else {
+                removeItem(item);
+            }
         },
 
         _getItemById: function(itemId) {
@@ -664,9 +683,7 @@
         },
 
         setIndexOfItem: function(item, index) {
-            if((typeof index) === 'undefined') {
-                index = [];
-            }
+            index = index || [];
 
             index.unshift(item.index());
 
@@ -917,9 +934,10 @@
 
     };
 
-    $.fn.nestable = function(params, val) {
-        var lists = this,
-            retval = this;
+    $.fn.nestable = function(params) {
+        var lists  = this,
+            retval = this,
+            args   = arguments;
 
         if(!('Nestable' in window)) {
             window.Nestable = {};
@@ -933,13 +951,17 @@
                 Nestable.counter++;
                 $(this).data("nestable", new Plugin(this, params));
                 $(this).data("nestable-id", Nestable.counter);
-
             }
             else {
                 if(typeof params === 'string' && typeof plugin[params] === 'function') {
-                    if (typeof val !== 'undefined') {
-                        retval = plugin[params](val);
-                    }else{
+                    if(args.length > 1){
+                        var pluginArgs = [];
+                        for (var i = 1; i < args.length; i++) {
+                          pluginArgs.push(args[i]);
+                        }
+                        retval = plugin[params].apply(plugin, pluginArgs);
+                    }
+                    else {
                         retval = plugin[params]();
                     }
                 }
