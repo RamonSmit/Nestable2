@@ -124,7 +124,8 @@
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
+            var items = this.el.find(list.options.itemNodeName);
+            $.each(items, function(k, el) {
                 var item = $(el),
                     parent = item.parent();
                 list.setParent(item);
@@ -132,6 +133,11 @@
                     list.collapseItem(parent.parent());
                 }
             });
+
+            // Append the .dd-empty div if the list don't have any items on init
+            if (!items.length) {
+                this.appendEmptyElement(this.el);
+            }
 
             list.el.on('click', 'button', function(e) {
                 if (list.dragEl) {
@@ -970,7 +976,7 @@
                     this.unsetParent(parent.parent());
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
-                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+                    this.appendEmptyElement(this.dragRootEl);
                 }
                 // parent root list has changed
                 this.dragRootEl = pointElRoot;
@@ -978,8 +984,11 @@
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
+        },
+        // Append the .dd-empty div to the list so it can be populated and styled
+        appendEmptyElement: function(element) {
+            element.append('<div class="' + this.options.emptyClass + '"/>');
         }
-
     };
 
     $.fn.nestable = function(params) {
