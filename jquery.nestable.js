@@ -3,7 +3,7 @@
  */
 
 (function($, window, document, undefined) {
-    var hasTouch = 'ontouchstart' in window;
+    var hasTouch = 'ontouchstart' in document;
 
     /**
      * Detect CSS pointer-events property
@@ -23,11 +23,6 @@
         docEl.removeChild(el);
         return !!supports;
     })();
-
-    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
-        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
-        eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
         contentCallback: function(item) {return item.content || '' ? item.content : item.id;},
@@ -139,7 +134,7 @@
             });
 
             list.el.on('click', 'button', function(e) {
-                if (list.dragEl || (!hasTouch && e.button !== 0)) {
+                if (list.dragEl) {
                     return;
                 }
                 var target = $(e.currentTarget),
@@ -161,52 +156,56 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if (!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl) {
                     return;
                 }
+
+                list.isTouch = /^touch/.test(e.type);
+                if (list.isTouch && e.touches.length !== 1) {
+                    return;
+                }
+
                 e.preventDefault();
-                list.dragStart(hasTouch ? e.touches[0] : e);
+                list.dragStart(e.touches ? e.touches[0] : e);
             };
 
             var onMoveEvent = function(e) {
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragMove(hasTouch ? e.touches[0] : e);
+                    list.dragMove(e.touches ? e.touches[0] : e);
                 }
             };
 
             var onEndEvent = function(e) {
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.changedTouches[0] : e);
+                    list.dragStop(e.touches ? e.changedTouches[0] : e);
                 }
             };
 
             if (hasTouch) {
-                list.el[0].addEventListener(eStart, onStartEvent, false);
-                window.addEventListener(eMove, onMoveEvent, false);
-                window.addEventListener(eEnd, onEndEvent, false);
-                window.addEventListener(eCancel, onEndEvent, false);
+                list.el[0].addEventListener('touchstart', onStartEvent, false);
+                window.addEventListener('touchmove', onMoveEvent, false);
+                window.addEventListener('touchend', onEndEvent, false);
+                window.addEventListener('touchcancel', onEndEvent, false);
             }
-            else {
-                list.el.on(eStart, onStartEvent);
-                list.w.on(eMove, onMoveEvent);
-                list.w.on(eEnd, onEndEvent);
-            }
+
+            list.el.on('mousedown', onStartEvent);
+            list.w.on('mousemove', onMoveEvent);
+            list.w.on('mouseup', onEndEvent);
 
             var destroyNestable = function()
             {
                 if (hasTouch) {
-                    list.el[0].removeEventListener(eStart, onStartEvent, false);
-                    window.removeEventListener(eMove, onMoveEvent, false);
-                    window.removeEventListener(eEnd, onEndEvent, false);
-                    window.removeEventListener(eCancel, onEndEvent, false);
+                    list.el[0].removeEventListener('touchstart', onStartEvent, false);
+                    window.removeEventListener('touchmove', onMoveEvent, false);
+                    window.removeEventListener('touchend', onEndEvent, false);
+                    window.removeEventListener('touchcancel', onEndEvent, false);
                 }
-                else {
-                    list.el.off(eStart, onStartEvent);
-                    list.w.off(eMove, onMoveEvent);
-                    list.w.off(eEnd, onEndEvent);
-                }
+
+                list.el.off('mousedown', onStartEvent);
+                list.w.off('mousemove', onMoveEvent);
+                list.w.off('mouseup', onEndEvent);
 
                 list.el.off('click');
                 list.el.unbind('destroy-nestable');
@@ -579,6 +578,7 @@
                 distAxX: 0,
                 distAxY: 0
             };
+            this.isTouch = false;
             this.moving = false;
             this.dragEl = null;
             this.dragRootEl = null;
