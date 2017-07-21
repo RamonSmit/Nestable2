@@ -39,8 +39,8 @@ bower install --save nestable2
 You can also find us on [CDNJS](https://cdnjs.com/libraries/nestable2):
 
 ```
-//cdnjs.cloudflare.com/ajax/libs/nestable2/1.4.0/jquery.nestable.min.css
-//cdnjs.cloudflare.com/ajax/libs/nestable2/1.4.0/jquery.nestable.min.js
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.5.0/jquery.nestable.min.css
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.5.0/jquery.nestable.min.js
 ```
 
 ## Usage
