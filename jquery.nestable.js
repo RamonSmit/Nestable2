@@ -3,7 +3,7 @@
  */
 
 (function($, window, document, undefined) {
-    var hasTouch = 'ontouchstart' in window;
+    var hasTouch = 'ontouchstart' in document;
 
     /**
      * Detect CSS pointer-events property
@@ -13,7 +13,7 @@
     var hasPointerEvents = (function() {
         var el = document.createElement('div'),
             docEl = document.documentElement;
-        if(!('pointerEvents' in el.style)) {
+        if (!('pointerEvents' in el.style)) {
             return false;
         }
         el.style.pointerEvents = 'auto';
@@ -23,11 +23,6 @@
         docEl.removeChild(el);
         return !!supports;
     })();
-
-    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
-        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
-        eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
         contentCallback: function(item) {return item.content || '' ? item.content : item.id;},
@@ -54,6 +49,15 @@
         fixedDepth: false, //fixed item's depth
         fixed: false,
         includeContent: false,
+        scroll: false,
+        scrollSensitivity: 1,
+        scrollSpeed: 5,
+        scrollTriggers: {
+            top: 40,
+            left: 40,
+            right: -40,
+            bottom: -40
+        },
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
@@ -87,7 +91,7 @@
         this.el = $(element);
         options = options || defaults;
 
-        if(options.rootClass !== undefined && options.rootClass !== 'dd') {
+        if (options.rootClass !== undefined && options.rootClass !== 'dd') {
             options.listClass       = options.listClass ? options.listClass : options.rootClass + '-list';
             options.itemClass       = options.itemClass ? options.itemClass : options.rootClass + '-item';
             options.dragClass       = options.dragClass ? options.dragClass : options.rootClass + '-dragel';
@@ -102,7 +106,7 @@
         this.options = $.extend({}, defaults, options);
 
         // build HTML from serialized JSON if passed
-        if(this.options.json !== undefined) {
+        if (this.options.json !== undefined) {
             this._build();
         }
 
@@ -120,84 +124,94 @@
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
+            var items = this.el.find(list.options.itemNodeName);
+            $.each(items, function(k, el) {
                 var item = $(el),
                     parent = item.parent();
                 list.setParent(item);
-                if(parent.hasClass(list.options.collapsedClass)) {
+                if (parent.hasClass(list.options.collapsedClass)) {
                     list.collapseItem(parent.parent());
                 }
             });
 
+            // Append the .dd-empty div if the list don't have any items on init
+            if (!items.length) {
+                this.appendEmptyElement(this.el);
+            }
+
             list.el.on('click', 'button', function(e) {
-                if(list.dragEl || (!hasTouch && e.button !== 0)) {
+                if (list.dragEl) {
                     return;
                 }
                 var target = $(e.currentTarget),
                     action = target.data('action'),
                     item = target.parents(list.options.itemNodeName).eq(0);
-                if(action === 'collapse') {
+                if (action === 'collapse') {
                     list.collapseItem(item);
                 }
-                if(action === 'expand') {
+                if (action === 'expand') {
                     list.expandItem(item);
                 }
             });
 
             var onStartEvent = function(e) {
                 var handle = $(e.target);
-                if(!handle.hasClass(list.options.handleClass)) {
-                    if(handle.closest('.' + list.options.noDragClass).length) {
+                if (!handle.hasClass(list.options.handleClass)) {
+                    if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if(!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl) {
                     return;
                 }
+
+                list.isTouch = /^touch/.test(e.type);
+                if (list.isTouch && e.touches.length !== 1) {
+                    return;
+                }
+
                 e.preventDefault();
-                list.dragStart(hasTouch ? e.touches[0] : e);
+                list.dragStart(e.touches ? e.touches[0] : e);
             };
 
             var onMoveEvent = function(e) {
-                if(list.dragEl) {
+                if (list.dragEl) {
                     e.preventDefault();
-                    list.dragMove(hasTouch ? e.touches[0] : e);
+                    list.dragMove(e.touches ? e.touches[0] : e);
                 }
             };
 
             var onEndEvent = function(e) {
-                if(list.dragEl) {
+                if (list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.changedTouches[0] : e);
+                    list.dragStop(e.touches ? e.changedTouches[0] : e);
                 }
             };
 
-            if(hasTouch) {
-                list.el[0].addEventListener(eStart, onStartEvent, false);
-                window.addEventListener(eMove, onMoveEvent, false);
-                window.addEventListener(eEnd, onEndEvent, false);
-                window.addEventListener(eCancel, onEndEvent, false);
+            if (hasTouch) {
+                list.el[0].addEventListener('touchstart', onStartEvent, false);
+                window.addEventListener('touchmove', onMoveEvent, false);
+                window.addEventListener('touchend', onEndEvent, false);
+                window.addEventListener('touchcancel', onEndEvent, false);
             }
-            else {
-                list.el.on(eStart, onStartEvent);
-                list.w.on(eMove, onMoveEvent);
-                list.w.on(eEnd, onEndEvent);
-            }
+
+            list.el.on('mousedown', onStartEvent);
+            list.w.on('mousemove', onMoveEvent);
+            list.w.on('mouseup', onEndEvent);
 
             var destroyNestable = function()
             {
-                if(hasTouch) {
-                    list.el[0].removeEventListener(eStart, onStartEvent, false);
-                    window.removeEventListener(eMove, onMoveEvent, false);
-                    window.removeEventListener(eEnd, onEndEvent, false);
-                    window.removeEventListener(eCancel, onEndEvent, false);
+                if (hasTouch) {
+                    list.el[0].removeEventListener('touchstart', onStartEvent, false);
+                    window.removeEventListener('touchmove', onMoveEvent, false);
+                    window.removeEventListener('touchend', onEndEvent, false);
+                    window.removeEventListener('touchcancel', onEndEvent, false);
                 }
-                else {
-                    list.el.off(eStart, onStartEvent);
-                    list.w.off(eMove, onMoveEvent);
-                    list.w.off(eEnd, onEndEvent);
-                }
+
+                list.el.off('mousedown', onStartEvent);
+                list.w.off('mousemove', onMoveEvent);
+                list.w.off('mouseup', onEndEvent);
 
                 list.el.off('click');
                 list.el.unbind('destroy-nestable');
@@ -224,7 +238,7 @@
                 delete item.parent_id;
 
                 if (tree.children(listClassSelector).length === 0) {
-                    tree = tree.append(this.options.listRenderer('', this.options))
+                    tree = tree.append(this.options.listRenderer('', this.options));
                 }
 
                 tree = tree.find(listClassSelector);
@@ -239,7 +253,7 @@
             var html = this._buildItem(item, this.options);
 
             this._getItemById(item.id)
-                .html(html);
+                .replaceWith(html);
         },
 
         //use fade = 'fade' to fadeout item before removing.
@@ -248,13 +262,13 @@
         {
             var opts = this.options,
                 el   = this.el,
-                item = this._getItemById(itemId)
+                item = this._getItemById(itemId);
 
             //animation time
             time = time || 'slow';
 
             //removes item and additional elements from list
-            function removeItem(item){
+            function removeItem(item) {
 
                 // remove item
                 item = item || this;
@@ -272,11 +286,11 @@
                     if (siblings.length === 0) {
                         $(this).remove();
                     }
-                });                
+                });
             }
 
             //Setting fade to true, adds fadeOut effect to removing.
-            if(fade === 'fade'){
+            if (fade === 'fade') {
                 item.fadeOut(time, removeItem);
             }
             else {
@@ -292,7 +306,7 @@
         _build: function() {
             var json = this.options.json;
 
-            if(typeof json === 'string') {
+            if (typeof json === 'string') {
                 json = JSON.parse(json);
             }
 
@@ -300,7 +314,7 @@
         },
 
         _buildList: function(items, options) {
-            if(!items) {
+            if (!items) {
                 return '';
             }
 
@@ -330,7 +344,7 @@
             function filterClasses(classes) {
                 var new_classes = {};
 
-                for(var k in classes) {
+                for (var k in classes) {
                     // Remove duplicates
                     new_classes[classes[k]] = classes[k];
                 }
@@ -341,7 +355,7 @@
             function createClassesString(item, options) {
                 var classes = item.classes || {};
 
-                if(typeof classes === 'string') {
+                if (typeof classes === 'string') {
                     classes = [classes];
                 }
 
@@ -364,7 +378,7 @@
                 var data_attrs = {};
 
                 $.each(attr, function(key, value) {
-                    if(typeof value === 'object') {
+                    if (typeof value === 'object') {
                         value = JSON.stringify(value);
                     }
 
@@ -379,8 +393,11 @@
 
             var content = options.contentCallback(item);
             var children = this._buildList(item.children, options);
+            var html = $(options.itemRenderer(item_attrs, content, children, options, item));
 
-            return options.itemRenderer(item_attrs, content, children, options, item);
+            this.setParent(html);
+
+            return html[0].outerHTML;
         },
 
         serialize: function() {
@@ -392,15 +409,15 @@
                         item = $.extend({}, li.data()),
                         sub = li.children(list.options.listNodeName);
 
-                    if(list.options.includeContent) {
+                    if (list.options.includeContent) {
                         var content = li.find('.' + list.options.contentClass).html();
 
-                        if(content) {
+                        if (content) {
                             item.content = content;
                         }
                     }
 
-                    if(sub.length) {
+                    if (sub.length) {
                         item.children = step(sub);
                     }
                     array.push(item);
@@ -452,11 +469,10 @@
         serialise: function() {
             return this.serialize();
         },
-        
+
         toHierarchy: function(options) {
 
             var o = $.extend({}, this.options, options),
-                sDepth = o.startDepthCount || 0,
                 ret = [];
 
             $(this.element).children(o.items).each(function() {
@@ -509,7 +525,6 @@
                 var right = left + 1,
                     id,
                     pid;
-                var new_item = item.children(o.options.listNodeName).children(o.options.itemNodeName); /// .data()
 
                 if (item.children(o.options.listNodeName).children(o.options.itemNodeName).length > 0) {
                     depth++;
@@ -569,6 +584,7 @@
                 distAxX: 0,
                 distAxY: 0
             };
+            this.isTouch = false;
             this.moving = false;
             this.dragEl = null;
             this.dragRootEl = null;
@@ -583,7 +599,7 @@
 
         collapseItem: function(li) {
             var lists = li.children(this.options.listNodeName);
-            if(lists.length) {
+            if (lists.length) {
                 li.addClass(this.options.collapsedClass);
             }
         },
@@ -604,7 +620,7 @@
 
         setParent: function(li) {
             //Check if li is an element of itemNodeName type and has children
-            if(li.is(this.options.itemNodeName) && li.children(this.options.listNodeName).length) {
+            if (li.is(this.options.itemNodeName) && li.children(this.options.listNodeName).length) {
                 // make sure NOT showing two or more sets data-action buttons
                 li.children('[data-action]').remove();
                 li.prepend($(this.options.expandBtnHTML));
@@ -660,9 +676,9 @@
             // total depth of dragging item
             var i, depth,
                 items = this.dragEl.find(this.options.itemNodeName);
-            for(i = 0; i < items.length; i++) {
+            for (i = 0; i < items.length; i++) {
                 depth = $(items[i]).parents(this.options.listNodeName).length;
-                if(depth > this.dragDepth) {
+                if (depth > this.dragDepth) {
                     this.dragDepth = depth;
                 }
             }
@@ -673,7 +689,7 @@
         //  item    : something to place into new sublevel
         createSubLevel: function(element, item) {
             var list = $('<' + this.options.listNodeName + '/>').addClass(this.options.listClass);
-            if(item) list.append(item);
+            if (item) list.append(item);
             element.append(list);
             this.setParent(element);
             return list;
@@ -684,7 +700,7 @@
 
             index.unshift(item.index());
 
-            if($(item[0].parentNode)[0] !== this.dragRootEl[0]) {
+            if ($(item[0].parentNode)[0] !== this.dragRootEl[0]) {
                 this.setIndexOfItem($(item[0].parentNode), index);
             }
             else {
@@ -696,17 +712,17 @@
             var currentEl = this.el,
                 lastIndex = indexArray.length - 1;
 
-            //Put drag elemnt at current element position.
+            //Put drag element at current element position.
             function placeElement(currentEl, dragElement) {
-                if(indexArray[lastIndex] === 0) {
+                if (indexArray[lastIndex] === 0) {
                     $(currentEl).prepend(dragElement.clone());
                 } else {
                     $(currentEl.children[indexArray[lastIndex] - 1]).after(dragElement.clone());
                 }
             }
             //Diggin through indexArray to get home for dragElement.
-            for(var i = 0; i < indexArray.length; i++) {
-                if(lastIndex === parseInt(i)) {
+            for (var i = 0; i < indexArray.length; i++) {
+                if (lastIndex === parseInt(i)) {
                     placeElement(currentEl, dragElement);
                     return;
                 }
@@ -722,35 +738,35 @@
             // fix for zepto.js
             //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
             var position = {
-              top  : e.pageY,
-              left : e.pageX
+                top  : e.pageY,
+                left : e.pageX
             };
             //Get indexArray of item at drag start.
             var srcIndex = this.dragEl.data('indexOfItem');
-            
+
             var el = this.dragEl.children(this.options.itemNodeName).first();
-            
+
             el[0].parentNode.removeChild(el[0]);
 
             this.dragEl.remove(); //Remove dragEl, cause it can affect on indexing in html collection.
-            
+
             //Before drag stop callback
             var continueExecution = this.options.beforeDragStop.call(this, this.el, el, this.placeEl.parent());
             if (typeof continueExecution !== 'undefined' && continueExecution === false) {
                 var parent = this.placeEl.parent();
                 this.placeEl.remove();
-                if(!parent.children().length) {
+                if (!parent.children().length) {
                     this.unsetParent(parent.parent());
                 }
                 this.restoreItemAtIndex(el, srcIndex);
                 this.reset();
                 return;
             }
-            
+
             this.placeEl.replaceWith(el);
 
-            if(this.hasNewRoot) {
-                if(this.options.fixed === true) {
+            if (this.hasNewRoot) {
+                if (this.options.fixed === true) {
                     this.restoreItemAtIndex(el, srcIndex);
                 }
                 else {
@@ -796,24 +812,65 @@
             var newAx = Math.abs(mouse.distX) > Math.abs(mouse.distY) ? 1 : 0;
 
             // do nothing on first move
-            if(!mouse.moving) {
+            if (!mouse.moving) {
                 mouse.dirAx = newAx;
                 mouse.moving = true;
                 return;
             }
 
+            // do scrolling if enable
+            if (opt.scroll) {
+                if (typeof window.jQuery.fn.scrollParent !== 'undefined') {
+                    var scrolled = false;
+                    var scrollParent = this.el.scrollParent()[0];
+                    if (scrollParent !== document && scrollParent.tagName !== 'HTML') {
+                        if ((opt.scrollTriggers.bottom + scrollParent.offsetHeight) - e.pageY < opt.scrollSensitivity)
+                            scrollParent.scrollTop = scrolled = scrollParent.scrollTop + opt.scrollSpeed;
+                        else if (e.pageY - opt.scrollTriggers.top < opt.scrollSensitivity)
+                            scrollParent.scrollTop = scrolled = scrollParent.scrollTop - opt.scrollSpeed;
+
+                        if ((opt.scrollTriggers.right + scrollParent.offsetWidth) - e.pageX < opt.scrollSensitivity)
+                            scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft + opt.scrollSpeed;
+                        else if (e.pageX - opt.scrollTriggers.left < opt.scrollSensitivity)
+                            scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft - opt.scrollSpeed;
+                    } else {
+                        if (e.pageY - $(document).scrollTop() < opt.scrollSensitivity)
+                            scrolled = $(document).scrollTop($(document).scrollTop() - opt.scrollSpeed);
+                        else if ($(window).height() - (e.pageY - $(document).scrollTop()) < opt.scrollSensitivity)
+                            scrolled = $(document).scrollTop($(document).scrollTop() + opt.scrollSpeed);
+
+                        if (e.pageX - $(document).scrollLeft() < opt.scrollSensitivity)
+                            scrolled = $(document).scrollLeft($(document).scrollLeft() - opt.scrollSpeed);
+                        else if ($(window).width() - (e.pageX - $(document).scrollLeft()) < opt.scrollSensitivity)
+                            scrolled = $(document).scrollLeft($(document).scrollLeft() + opt.scrollSpeed);
+                    }
+                } else {
+                    console.warn('To use scrolling you need to have scrollParent() function, check documentation for more information');
+                }
+            }
+
+            if (this.scrollTimer) {
+                clearTimeout(this.scrollTimer);
+            }
+
+            if (opt.scroll && scrolled) {
+                this.scrollTimer = setTimeout(function() {
+                    $(window).trigger(e);
+                }, 10);
+            }
+
             // calc distance moved on this axis (and direction)
-            if(mouse.dirAx !== newAx) {
+            if (mouse.dirAx !== newAx) {
                 mouse.distAxX = 0;
                 mouse.distAxY = 0;
             }
             else {
                 mouse.distAxX += Math.abs(mouse.distX);
-                if(mouse.dirX !== 0 && mouse.dirX !== mouse.lastDirX) {
+                if (mouse.dirX !== 0 && mouse.dirX !== mouse.lastDirX) {
                     mouse.distAxX = 0;
                 }
                 mouse.distAxY += Math.abs(mouse.distY);
-                if(mouse.dirY !== 0 && mouse.dirY !== mouse.lastDirY) {
+                if (mouse.dirY !== 0 && mouse.dirY !== mouse.lastDirY) {
                     mouse.distAxY = 0;
                 }
             }
@@ -822,19 +879,19 @@
             /**
              * move horizontal
              */
-            if(mouse.dirAx && mouse.distAxX >= opt.threshold) {
+            if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists, is not collapsed, and can have children
-                if(mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.noChildrenClass)) {
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.noChildrenClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
                     depth = this.placeEl.parents(opt.listNodeName).length;
-                    if(depth + this.dragDepth <= opt.maxDepth) {
+                    if (depth + this.dragDepth <= opt.maxDepth) {
                         // create new sub-level if one doesn't exist
-                        if(!list.length) {
+                        if (!list.length) {
                             this.createSubLevel(prev, this.placeEl);
                         }
                         else {
@@ -845,13 +902,13 @@
                     }
                 }
                 // decrease horizontal level
-                if(mouse.distX < 0) {
+                if (mouse.distX < 0) {
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
-                    if(!next.length) {
+                    if (!next.length) {
                         parent = this.placeEl.parent();
                         this.placeEl.closest(opt.itemNodeName).after(this.placeEl);
-                        if(!parent.children().length) {
+                        if (!parent.children().length) {
                             this.unsetParent(parent.parent());
                         }
                     }
@@ -861,20 +918,20 @@
             var isEmpty = false;
 
             // find list item under cursor
-            if(!hasPointerEvents) {
+            if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'hidden';
             }
             this.pointEl = $(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - (window.pageYOffset || document.documentElement.scrollTop)));
-            if(!hasPointerEvents) {
+            if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'visible';
             }
-            if(this.pointEl.hasClass(opt.handleClass)) {
+            if (this.pointEl.hasClass(opt.handleClass)) {
                 this.pointEl = this.pointEl.closest(opt.itemNodeName);
             }
-            if(this.pointEl.hasClass(opt.emptyClass)) {
+            if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
             }
-            else if(!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
+            else if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
                 return;
             }
 
@@ -885,50 +942,53 @@
             /**
              * move vertical
              */
-            if(!mouse.dirAx || isNewRoot || isEmpty) {
+            if (!mouse.dirAx || isNewRoot || isEmpty) {
                 // check if groups match if dragging over new root
-                if(isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
+                if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
 
                 // fixed item's depth, use for some list has specific type, eg:'Volume, Section, Chapter ...'
-                if(this.options.fixedDepth && this.dragDepth + 1 !== this.pointEl.parents(opt.listNodeName).length) {
+                if (this.options.fixedDepth && this.dragDepth + 1 !== this.pointEl.parents(opt.listNodeName).length) {
                     return;
                 }
 
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
-                if(depth > opt.maxDepth) {
+                if (depth > opt.maxDepth) {
                     return;
                 }
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                 parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
-                if(isEmpty) {
+                if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
                 }
-                else if(before) {
+                else if (before) {
                     this.pointEl.before(this.placeEl);
                 }
                 else {
                     this.pointEl.after(this.placeEl);
                 }
-                if(!parent.children().length) {
+                if (!parent.children().length) {
                     this.unsetParent(parent.parent());
                 }
-                if(!this.dragRootEl.find(opt.itemNodeName).length) {
-                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+                if (!this.dragRootEl.find(opt.itemNodeName).length) {
+                    this.appendEmptyElement(this.dragRootEl);
                 }
                 // parent root list has changed
                 this.dragRootEl = pointElRoot;
-                if(isNewRoot) {
+                if (isNewRoot) {
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
+        },
+        // Append the .dd-empty div to the list so it can be populated and styled
+        appendEmptyElement: function(element) {
+            element.append('<div class="' + this.options.emptyClass + '"/>');
         }
-
     };
 
     $.fn.nestable = function(params) {
@@ -936,7 +996,7 @@
             retval = this,
             args   = arguments;
 
-        if(!('Nestable' in window)) {
+        if (!('Nestable' in window)) {
             window.Nestable = {};
             Nestable.counter = 0;
         }
@@ -944,17 +1004,17 @@
         lists.each(function() {
             var plugin = $(this).data("nestable");
 
-            if(!plugin) {
+            if (!plugin) {
                 Nestable.counter++;
                 $(this).data("nestable", new Plugin(this, params));
                 $(this).data("nestable-id", Nestable.counter);
             }
             else {
-                if(typeof params === 'string' && typeof plugin[params] === 'function') {
-                    if(args.length > 1){
+                if (typeof params === 'string' && typeof plugin[params] === 'function') {
+                    if (args.length > 1){
                         var pluginArgs = [];
                         for (var i = 1; i < args.length; i++) {
-                          pluginArgs.push(args[i]);
+                            pluginArgs.push(args[i]);
                         }
                         retval = plugin[params].apply(plugin, pluginArgs);
                     }

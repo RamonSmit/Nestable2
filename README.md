@@ -34,6 +34,15 @@ Or `require('nestable2')` from your code.
 bower install --save nestable2
 ```
 
+### CDN
+
+You can also find us on [CDNJS](https://cdnjs.com/libraries/nestable2):
+
+```
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.5.0/jquery.nestable.min.css
+//cdnjs.cloudflare.com/ajax/libs/nestable2/1.5.0/jquery.nestable.min.js
+```
+
 ## Usage
 
 Write your nested HTML lists like so:
@@ -208,7 +217,18 @@ You can deactivate the plugin by running
 ```js
 $('.dd').nestable('destroy');
 ```
+### Autoscroll while dragging
+Autoscrolls the container element while dragging if you drag the element over the offsets defined in `scrollTriggers` config option.
 
+```js
+$('.dd').nestable({ scroll: true });
+```
+
+To use this feature you need to have `jQuery >= 1.9` and `scrollParent()` method.
+You can be find this method in `jQuery UI` or if you don't want to have `jQuery UI` as a dependency you can use [this repository](https://github.com/slindberg/jquery-scrollparent).
+
+
+You can also control the scroll sensitivity and speed, check `scrollSensitivity` and `scrollSpeed` options.
 
 ### On the fly nestable generation
 
@@ -275,6 +295,10 @@ You can change the follow options:
 * `maxDepth` number of levels an item can be nested (default `5`)
 * `group` group ID to allow dragging between lists (default `0`)
 * `callback` callback function when an element has been changed (default `null`)
+* `scroll` enable or disable the scrolling behaviour (default: `false`)
+* `scrollSensitivity` mouse movement needed to trigger the scroll (default: `1`)
+* `scrollSpeed` speed of the scroll (default: `5`)
+* `scrollTriggers` distance from the border where scrolling become active (default: `{ top: 40, left: 40, right: -40, bottom: -40 }`)
 
 These advanced config options are also available:
 
@@ -301,6 +325,19 @@ These advanced config options are also available:
 **Inspect the [Nestable2 Demo](https://ramonsmit.github.io/Nestable2/) for guidance.**
 
 ## Change Log
+
+### 21th July 2017
+* [spathon] Append the .dd-empty div if the list don't have any items on init, fixed [#52](https://github.com/RamonSmit/Nestable2/issues/52)
+* [pjona] Fixed problem on Chrome with touch screen and mouse, fixed [#28](https://github.com/RamonSmit/Nestable2/issues/28) and[#73](https://github.com/RamonSmit/Nestable2/issues/73)
+
+### 15th July 2017
+* [RomanBurunkov] Added fadeOut support to `remove` method
+* [pjona] Fixed `replace` method (added collapse/expand buttons when item has children), see [#69](https://github.com/RamonSmit/Nestable2/issues/69)
+* [uniring] Added autoscroll while dragging, see [#71](https://github.com/RamonSmit/Nestable2/issues/71)
+
+### 2nd July 2017
+* [pjona] Added CDN support
+* [pjona] Removed unneeded directories in `dist/`
 
 ### 25th June 2017
 * [pjona] Fixed `add` method when using parent_id, see [#66](https://github.com/RamonSmit/Nestable2/issues/66)

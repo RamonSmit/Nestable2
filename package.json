@@ -1,6 +1,6 @@
 {
   "name": "nestable2",
-  "version": "1.3.1",
+  "version": "1.5.0",
   "description": "Drag & drop hierarchical list with mouse and touch compatibility",
   "main": "jquery.nestable.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.4.2",
     "gulp-eslint": "^4.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0"
   },
   "license": "MIT",
