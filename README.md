@@ -326,6 +326,9 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 9th August 2017
+* [pjona] Added support for string (GUID) as a data id
+
 ### 21th July 2017
 * [spathon] Append the .dd-empty div if the list don't have any items on init, fixed [#52](https://github.com/RamonSmit/Nestable2/issues/52)
 * [pjona] Fixed problem on Chrome with touch screen and mouse, fixed [#28](https://github.com/RamonSmit/Nestable2/issues/28) and[#73](https://github.com/RamonSmit/Nestable2/issues/73)
