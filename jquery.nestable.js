@@ -450,8 +450,15 @@
                     depth--;
                 }
 
-                id = parseInt($(item).attr('data-id'));
-                pid = parseInt($(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id')) || '';
+                id = $(item).attr('data-id');
+                if (isInt(id)) {
+                    id = parseInt(id);
+                }
+
+                pid = $(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id') || '';
+                if (isInt(pid)) {
+                    id = parseInt(pid);
+                }
 
                 if (id) {
                     ret.push({"id": id, "parent_id": pid, "depth": depth, "lft": lft, "rgt": rgt});
@@ -459,6 +466,10 @@
 
                 lft = rgt + 1;
                 return lft;
+            }
+
+            function isInt(value) {
+                return $.isNumeric(value) && Math.floor(value) == value
             }
         },
 
