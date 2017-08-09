@@ -469,7 +469,7 @@
             }
 
             function isInt(value) {
-                return $.isNumeric(value) && Math.floor(value) == value
+                return $.isNumeric(value) && Math.floor(value) == value;
             }
         },
 
