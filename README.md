@@ -205,11 +205,26 @@ This will delete the item with all his children.
 ```js
 $('.dd').nestable('remove', 1);
 ```
-This will fadeOut the item and his children and then delete the item with all his children.
+This will fadeOut the item with data-id '1' with its children and then delete the item with all its children.
 Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
 Default value for time is 'slow'.
 ```js
-$('.dd').nestable('remove', 1, 'fade', time);
+$('.dd').nestable('remove', 1, 'fade', 'slow');
+```
+This will fadeOut the item with data-id '1' with its children, then delete the item with all its children and then invoke callback function.
+```js
+$('.dd').nestable('remove', 1, 'fade', 500, function(){
+    console.log('Item deleted');
+});
+```
+
+`removeAll`:
+Removes all items from the list.
+You can also use fade option to fadeOut list items before deletion.
+Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
+Default value for time is 'slow'.
+```js
+$('.dd').nestable('removeAll', 'fade', 500);
 ```
 
 `destroy`:
