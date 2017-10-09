@@ -59,7 +59,7 @@
             bottom: -40
         },
         effect: {
-            animation: 'fade',
+            animation: 'none',
             time: 'slow'
         },
         callback: function(l, e, p) {},
@@ -291,10 +291,10 @@
             var item = this._getItemById(itemId);
 
             //animation style
-            animation = opts.effect.animation || 'fade';
+            var animation = opts.effect.animation || 'fade';
 
             //animation time
-            time = opts.effect.time || 'slow';
+            var time = opts.effect.time || 'slow';
 
             //Setting fade to true, adds fadeOut effect to removing.
             if (animation === 'fade'){
@@ -318,10 +318,10 @@
                 items = node.children(opts.itemNodeName);
 
             //animation style
-            animation = opts.effect.animation || 'fade';
+            var animation = opts.effect.animation || 'fade';
 
             //animation time
-            time = opts.effect.time || 'slow';
+            var time = opts.effect.time || 'slow';
 
             function remove(){
                 //Removes each item and its children.
