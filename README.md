@@ -205,26 +205,22 @@ This will delete the item with all his children.
 ```js
 $('.dd').nestable('remove', 1);
 ```
-This will fadeOut the item with data-id '1' with its children and then delete the item with all its children.
-Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
-Default value for time is 'slow'.
+This will invoke callback function after deleting the item with data-id '1'.
+It is usefull if you use effect option to animate item removing, but if you don't need it just omit second argument.
 ```js
-$('.dd').nestable('remove', 1, 'fade', 'slow');
-```
-This will fadeOut the item with data-id '1' with its children, then delete the item with all its children and then invoke callback function.
-```js
-$('.dd').nestable('remove', 1, 'fade', 500, function(){
+$('.dd').nestable('remove', 1, function(){
     console.log('Item deleted');
 });
 ```
 
 `removeAll`:
 Removes all items from the list.
-You can also use fade option to fadeOut list items before deletion.
-Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
-Default value for time is 'slow'.
+You can also use callback function to do something after removing all items.
+It is usefull if you use effect option to animate items removing, but if you don't need it just omit second argument.
 ```js
-$('.dd').nestable('removeAll', 'fade', 500);
+$('.dd').nestable('removeAll', 'function(){
+    console.log('All items deleted');
+});
 ```
 
 `destroy`:
@@ -314,6 +310,7 @@ You can change the follow options:
 * `scrollSensitivity` mouse movement needed to trigger the scroll (default: `1`)
 * `scrollSpeed` speed of the scroll (default: `5`)
 * `scrollTriggers` distance from the border where scrolling become active (default: `{ top: 40, left: 40, right: -40, bottom: -40 }`)
+* `effect` removing items animation effect (default: `{ animation: 'none', time: 'slow'}`). To fadeout elements set 'animation' value to 'fade', during initialization the plugin.
 
 These advanced config options are also available:
 
