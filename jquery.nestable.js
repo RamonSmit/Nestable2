@@ -58,6 +58,10 @@
             right: -40,
             bottom: -40
         },
+        effect: {
+            animation: 'fade',
+            time: 'slow'
+        },
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
@@ -280,16 +284,20 @@
 
         //removes item by itemId, use fade = 'fade' to fadeout item before removing.
         //by using time(string/msecs), you can control animation speed, default is jq 'slow'
-        remove: function (itemId, fade, time, callback)
+        remove: function (itemId, callback)
         {
+            var opts = this.options;
             var list = this;
             var item = this._getItemById(itemId);
 
+            //animation style
+            animation = opts.effect.animation || 'fade';
+
             //animation time
-            time = time || 'slow';
+            time = opts.effect.time || 'slow';
 
             //Setting fade to true, adds fadeOut effect to removing.
-            if (fade === 'fade'){
+            if (animation === 'fade'){
                 item.fadeOut(time, function(){
                     list.removeItem(item);
                     if (callback) callback();
@@ -302,13 +310,18 @@
 
         //removes all items from the list
         //by using time(string/msecs), you can control animation speed, default is jq 'slow'
-        removeAll: function(fade, time){
+        removeAll: function(callback){
+
             var list  = this,
-                node  = this.el.find(list.options.listNodeName).first(),
-                items = node.children(list.options.itemNodeName);
+                opts  = this.options,
+                node  = list.el.find(opts.listNodeName).first(),
+                items = node.children(opts.itemNodeName);
+
+            //animation style
+            animation = opts.effect.animation || 'fade';
 
             //animation time
-            time = time || 'slow';
+            time = opts.effect.time || 'slow';
 
             function remove(){
                 //Removes each item and its children.
@@ -317,10 +330,11 @@
                 });
                 //Now we can again show our node element
                 node.show();
+                if (callback) callback();
             }
 
             //Setting fade to true, adds fadeOut effect to removing.
-            if (fade === 'fade'){
+            if (animation === 'fade'){
                 node.fadeOut(time, remove);
             }
             else {
