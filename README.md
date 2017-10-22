@@ -6,7 +6,8 @@ Nestable2 - new pickup of Nestable!
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://ramonsmit.github.com/Nestable2/)
 [![Build Status](https://travis-ci.org/RamonSmit/Nestable2.svg)](https://travis-ci.org/RamonSmit/Nestable2)
 [![License](https://img.shields.io/npm/l/nestable2.svg?style=flat-square)](https://github.com/RamonSmit/Nestable2/blob/master/LICENSE)
-[![Release](https://img.shields.io/npm/v/nestable2.svg?style=flat-square)](https://www.npmjs.com/package/nestable2)
+[![NPM version](https://img.shields.io/npm/v/nestable2.svg?style=flat-square)](https://www.npmjs.com/package/nestable2)
+![Bower version](https://img.shields.io/bower/v/nestable2.svg?style=flat-square)
 
 Nestable is an experimental example and IS under active development. If it suits your requirements feel free to expand upon it!
 
