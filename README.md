@@ -333,6 +333,12 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 21th October 2017
+* [klgd] Fixed conflict when project using also jQuery 2.*
+* [RomanBurunkov] Moved effect and time parameter in `remove` method to config option. This changes break backward compatibility with version 1.5
+* [RomanBurunkov] Added callback in methods `remove` and `removeAll` as a parameter
+* [RomanKhomyshynets] Fixed `add` function with non-leaf parent_id, fixed [#84](https://github.com/RamonSmit/Nestable2/issues/84)
+
 ### 9th August 2017
 * [pjona] Added support for string (GUID) as a data id
 
