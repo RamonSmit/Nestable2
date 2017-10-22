@@ -199,17 +199,23 @@ $('.dd').nestable('replace', {"id":1,"children":[{"id":4}]});
 ```
 
 `remove`:
-You can remove existing item by passing 'id' of this element.
-You also can add 'fade' parameter to fadeOut element before removing.
-This will delete the item with all his children.
+You can remove existing item by passing 'id' of this element. To animate item removing check `effect` config option. This will delete the item with all his children.
 ```js
 $('.dd').nestable('remove', 1);
 ```
-This will fadeOut the item and his children and then delete the item with all his children.
-Use time option to control animation speed, i.e: 300, which is 300 msecs. You can also omit this option.
-Default value for time is 'slow'.
+This will invoke callback function after deleting the item with data-id '1'.
 ```js
-$('.dd').nestable('remove', 1, 'fade', time);
+$('.dd').nestable('remove', 1, function(){
+    console.log('Item deleted');
+});
+```
+
+`removeAll`:
+Removes all items from the list. To animate items removing check `effect` config option. You can also use callback function to do something after removing all items.
+```js
+$('.dd').nestable('removeAll', function(){
+    console.log('All items deleted');
+});
 ```
 
 `destroy`:
@@ -299,6 +305,7 @@ You can change the follow options:
 * `scrollSensitivity` mouse movement needed to trigger the scroll (default: `1`)
 * `scrollSpeed` speed of the scroll (default: `5`)
 * `scrollTriggers` distance from the border where scrolling become active (default: `{ top: 40, left: 40, right: -40, bottom: -40 }`)
+* `effect` removing items animation effect (default: `{ animation: 'none', time: 'slow'}`). To fadeout elements set 'animation' value to 'fade', during initialization the plugin.
 
 These advanced config options are also available:
 

@@ -58,6 +58,10 @@
             right: -40,
             bottom: -40
         },
+        effect: {
+            animation: 'none',
+            time: 'slow'
+        },
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
@@ -119,9 +123,7 @@
             var list = this;
 
             list.reset();
-
             list.el.data('nestable-group', this.options.group);
-
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
             var items = this.el.find(list.options.itemNodeName);
@@ -256,45 +258,86 @@
                 .replaceWith(html);
         },
 
-        //use fade = 'fade' to fadeout item before removing.
-        //by using time(string/msecs), you can control animation speed, default is jq 'slow'
-        remove: function (itemId, fade, time)
-        {
+        //removes item and additional elements from list
+        removeItem: function (item){
             var opts = this.options,
-                el   = this.el,
-                item = this._getItemById(itemId);
+                el   = this.el;
+
+            // remove item
+            item = item || this;
+            item.remove();
+
+            // remove empty children lists
+            var emptyListsSelector = '.' + opts.listClass
+                + ' .' + opts.listClass + ':not(:has(*))';
+            $(el).find(emptyListsSelector).remove();
+
+            // remove buttons if parents do not have children
+            var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
+            $(el).find(buttonsSelector).each(function() {
+                var siblings = $(this).siblings('.' + opts.listClass);
+                if (siblings.length === 0) {
+                    $(this).remove();
+                }
+            });
+        },
+
+        //removes item by itemId and run callback at the end
+        remove: function (itemId, callback)
+        {
+            var opts = this.options;
+            var list = this;
+            var item = this._getItemById(itemId);
+
+            //animation style
+            var animation = opts.effect.animation || 'fade';
 
             //animation time
-            time = time || 'slow';
+            var time = opts.effect.time || 'slow';
 
-            //removes item and additional elements from list
-            function removeItem(item) {
-
-                // remove item
-                item = item || this;
-                item.remove();
-
-                // remove empty children lists
-                var emptyListsSelector = '.' + opts.listClass
-                    + ' .' + opts.listClass + ':not(:has(*))';
-                $(el).find(emptyListsSelector).remove();
-
-                // remove buttons if parents do not have children
-                var buttonsSelector = '[data-action="expand"], [data-action="collapse"]';
-                $(el).find(buttonsSelector).each(function() {
-                    var siblings = $(this).siblings('.' + opts.listClass);
-                    if (siblings.length === 0) {
-                        $(this).remove();
-                    }
+            //add fadeOut effect when removing
+            if (animation === 'fade'){
+                item.fadeOut(time, function(){
+                    list.removeItem(item);
                 });
             }
+            else {
+                this.removeItem(item);
+            }
 
-            //Setting fade to true, adds fadeOut effect to removing.
-            if (fade === 'fade') {
-                item.fadeOut(time, removeItem);
+            if (callback) callback();
+        },
+
+        //removes all items from the list and run callback at the end
+        removeAll: function(callback){
+
+            var list  = this,
+                opts  = this.options,
+                node  = list.el.find(opts.listNodeName).first(),
+                items = node.children(opts.itemNodeName);
+
+            //animation style
+            var animation = opts.effect.animation || 'fade';
+
+            //animation time
+            var time = opts.effect.time || 'slow';
+
+            function remove(){
+                //Removes each item and its children.
+                items.each(function() {
+                    list.removeItem($(this));
+                });
+                //Now we can again show our node element
+                node.show();
+                if (callback) callback();
+            }
+
+            //add fadeOut effect when removing
+            if (animation === 'fade'){
+                node.fadeOut(time, remove);
             }
             else {
-                removeItem(item);
+                remove();
             }
         },
 
@@ -648,11 +691,11 @@
         dragStart: function(e) {
             var mouse = this.mouse,
                 target = $(e.target),
-                dragItem = target.closest(this.options.itemNodeName);
-
-            var position = {};
-            position.top = e.pageY;
-            position.left = e.pageX;
+                dragItem = target.closest(this.options.itemNodeName),
+                position = {
+                    top  : e.pageY,
+                    left : e.pageX
+                };
 
             var continueExecution = this.options.onDragStart.call(this, this.el, dragItem, position);
 
@@ -726,9 +769,10 @@
             //Put drag element at current element position.
             function placeElement(currentEl, dragElement) {
                 if (indexArray[lastIndex] === 0) {
-                    $(currentEl).prepend(dragElement.clone());
-                } else {
-                    $(currentEl.children[indexArray[lastIndex] - 1]).after(dragElement.clone());
+                    $(currentEl).prepend(dragElement.clone(true)); //using true saves added to element events.
+                }
+                else {
+                    $(currentEl.children[indexArray[lastIndex] - 1]).after(dragElement.clone(true)); //using true saves added to element events.
                 }
             }
             //Diggin through indexArray to get home for dragElement.
@@ -996,6 +1040,7 @@
                 }
             }
         },
+
         // Append the .dd-empty div to the list so it can be populated and styled
         appendEmptyElement: function(element) {
             element.append('<div class="' + this.options.emptyClass + '"/>');
