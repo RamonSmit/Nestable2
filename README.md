@@ -218,7 +218,7 @@ Removes all items from the list.
 You can also use callback function to do something after removing all items.
 It is usefull if you use effect option to animate items removing, but if you don't need it just omit second argument.
 ```js
-$('.dd').nestable('removeAll', 'function(){
+$('.dd').nestable('removeAll', function(){
     console.log('All items deleted');
 });
 ```
