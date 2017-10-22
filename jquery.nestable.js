@@ -243,7 +243,7 @@
                     tree = tree.append(this.options.listRenderer('', this.options));
                 }
 
-                tree = tree.find(listClassSelector);
+                tree = tree.find(listClassSelector + ':first');
                 this.setParent(tree.parent());
             }
 
