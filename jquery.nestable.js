@@ -304,7 +304,7 @@
             else {
                 this.removeItem(item);
             }
-            
+
             if (callback) callback();
         },
 
