@@ -199,14 +199,11 @@ $('.dd').nestable('replace', {"id":1,"children":[{"id":4}]});
 ```
 
 `remove`:
-You can remove existing item by passing 'id' of this element.
-You also can add 'fade' parameter to fadeOut element before removing.
-This will delete the item with all his children.
+You can remove existing item by passing 'id' of this element. To animate item removing check `effect` config option. This will delete the item with all his children.
 ```js
 $('.dd').nestable('remove', 1);
 ```
 This will invoke callback function after deleting the item with data-id '1'.
-It is usefull if you use effect option to animate item removing, but if you don't need it just omit second argument.
 ```js
 $('.dd').nestable('remove', 1, function(){
     console.log('Item deleted');
@@ -214,9 +211,7 @@ $('.dd').nestable('remove', 1, function(){
 ```
 
 `removeAll`:
-Removes all items from the list.
-You can also use callback function to do something after removing all items.
-It is usefull if you use effect option to animate items removing, but if you don't need it just omit second argument.
+Removes all items from the list. To animate items removing check `effect` config option. You can also use callback function to do something after removing all items.
 ```js
 $('.dd').nestable('removeAll', function(){
     console.log('All items deleted');
