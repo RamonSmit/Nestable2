@@ -75,6 +75,29 @@ Then activate with jQuery like so:
 $('.dd').nestable({ /* config options */ });
 ```
 
+Fix items membership with HTML like so:
+```html
+<div class="dd">
+    <ol class="dd-list" data-list-no="1">
+        <li class="dd-item" data-move-in="1">
+           <span>Parent1</span>
+           <ol class="dd-list" data-list-no="2">
+                 <li class="dd-item" data-move-in="2"><span>Child1</span></li>
+                 <li class="dd-item" data-move-in="2"><span>Child2</span></li>
+          </ol>
+        </li>
+        <li class="dd-item" data-move-in="1">
+            <span>Parent2</span>
+           <ol class="dd-list" data-list-no="2">
+                 <li class="dd-item" data-move-in="2"><span>Child3</span></li>
+                 <li class="dd-item" data-move-in="2"><span>Child4</span></li>
+          </ol>
+        </li>
+    </ol>
+</div>
+```
+Items with `data-move-in="2"` can be dropped only in list with `data-list-no="2"`: "Child" Items can not be at the same level of their fathers
+
 ### Events
 `change`: For using an .on handler in jquery
 
