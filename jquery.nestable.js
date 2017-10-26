@@ -994,6 +994,11 @@
             var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
                 isNewRoot = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
+            var itemMoveIn = this.dragEl.find(opt.itemNodeName).data('moveIn');
+            var listNo = this.pointEl.closest('.dd-list').data('listNo');
+            if (itemMoveIn !== listNo) {
+                return;
+            }
             /**
              * move vertical
              */
