@@ -500,7 +500,7 @@
 
                 pid = $(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id') || '';
                 if (isInt(pid)) {
-                    id = parseInt(pid);
+                    pid = parseInt(pid);
                 }
 
                 if (id) {
