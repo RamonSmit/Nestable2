@@ -448,8 +448,17 @@
                 var array = [],
                     items = level.children(list.options.itemNodeName);
                 items.each(function() {
+                    // Get data-* from DOM, bypass data-* cache
+                    var liData = {};
+                    $(this).each(function() {
+                        $.each(this.attributes, function() {
+                            if(this.specified && this.name.startsWith("data-")) {
+                                liData[this.name.replace("data-", "")] = this.value;
+                            }
+                        });
+                    });
                     var li = $(this),
-                        item = $.extend({}, li.data()),
+                        item = $.extend({}, liData),
                         sub = li.children(list.options.listNodeName);
 
                     if (list.options.includeContent) {
