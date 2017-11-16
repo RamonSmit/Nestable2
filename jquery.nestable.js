@@ -452,7 +452,7 @@
                     var liData = {};
                     $(this).each(function() {
                         $.each(this.attributes, function() {
-                            if(this.specified && this.name.startsWith("data-")) {
+                            if (this.specified && this.name.startsWith("data-")) {
                                 liData[this.name.replace("data-", "")] = this.value;
                             }
                         });
