@@ -64,6 +64,7 @@
         },
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
+        onClick: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
