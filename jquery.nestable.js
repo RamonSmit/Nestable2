@@ -156,6 +156,8 @@
                 }
             });
 
+            // flag of begin drag
+            var beginDrag = false, dragPos = {x:0, y:0};
             var onStartEvent = function(e) {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
@@ -174,11 +176,27 @@
                 }
 
                 e.preventDefault();
-                list.dragStart(e.touches ? e.touches[0] : e);
+
+                dragPos.x = e.clientX;
+                dragPos.y = e.clientY;
+                beginDrag = true;
+            };
+
+            var mayDrag = function(npos) {
+                var dx = npos.x - dragPos.x;
+                var dy = npos.y - dragPos.y;
+                var d2 = Math.pow(dx, 2) + Math.pow(dy, 2);
+                return d2 > 4;
             };
 
             var onMoveEvent = function(e) {
-                if (list.dragEl) {
+                if (list.dragEl || beginDrag) {
+                    if (beginDrag && !mayDrag({x:e.clientX, y: e.clientY}))
+                        return;
+                    if (beginDrag) {
+                        beginDrag = false;
+                        list.dragStart(e.touches? e.touches[0] : e);
+                    }
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
                 }
@@ -188,7 +206,11 @@
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragStop(e.touches ? e.changedTouches[0] : e);
+                } else if (beginDrag) {
+                    e.preventDefault();
+                    list.clickStop(e.touches ? e.changedTouches[0] : e);
                 }
+                beginDrag = false;
             };
 
             if (hasTouch) {
@@ -1039,6 +1061,12 @@
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
+        },
+
+        clickStop: function(e) {
+            var target = $(e.target),
+                dragItem = target.closest(this.options.itemNodeName);
+            this.options.onClick.call(this, this.el, dragItem, dragItem.parent());
         },
 
         // Append the .dd-empty div to the list so it can be populated and styled
