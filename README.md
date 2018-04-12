@@ -1,5 +1,10 @@
-Nestable2 - new pickup of Nestable!
+Nestable2
 ========
+
+```
+At this moment I really don't have any spare time to maintain this package. 
+If there is anyone that wants to help me out with this, please message me trough a issue of mail.
+```
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
