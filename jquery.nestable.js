@@ -770,6 +770,13 @@
             //Put drag element at current element position.
             function placeElement(currentEl, dragElement) {
                 if (indexArray[lastIndex] === 0) {
+                    if ($(currentEl).hasClass(defaults.emptyClass)) {
+                		var currentElParent = currentEl.parentNode;
+                		currentElParent.removeChild(currentEl);
+                		currentEl = document.createElement(defaults.listNodeName);
+                		currentEl.classList.add(defaults.listClass);
+                		currentElParent.appendChild(currentEl);
+                	}
                     $(currentEl).prepend(dragElement.clone(true)); //using true saves added to element events.
                 }
                 else {
