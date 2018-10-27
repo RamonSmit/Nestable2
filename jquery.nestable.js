@@ -65,6 +65,7 @@
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
+        afterRestoreItem: function(l, e, p) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
             html += children;
@@ -815,6 +816,7 @@
                 }
                 this.restoreItemAtIndex(el, srcIndex);
                 this.reset();
+                this.options.afterRestoreItem.call(this, this.el, el, this.placeEl.parent());
                 return;
             }
 
@@ -823,6 +825,7 @@
             if (this.hasNewRoot) {
                 if (this.options.fixed === true) {
                     this.restoreItemAtIndex(el, srcIndex);
+                    this.options.afterRestoreItem.call(this, this.el, el, this.placeEl.parent());
                 }
                 else {
                     this.el.trigger('lostItem');
