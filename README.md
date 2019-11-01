@@ -49,6 +49,12 @@ You can also find us on [CDNJS](https://cdnjs.com/libraries/nestable2):
 //cdnjs.cloudflare.com/ajax/libs/nestable2/1.6.0/jquery.nestable.min.js
 ```
 
+You can also find us on [jsDelivr](https://www.jsdelivr.com/package/npm/nestable2)
+```
+//cdn.jsdelivr.net/npm/nestable2@1.6.0/jquery.nestable.min.js
+//cdn.jsdelivr.net/npm/nestable2@1.6.0/jquery.nestable.min.css
+```
+
 ## Usage
 
 Write your nested HTML lists like so:
