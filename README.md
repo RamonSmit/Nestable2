@@ -8,6 +8,7 @@ If there is anyone that wants to help me out with this, please message me trough
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
+[![Status](https://img.shields.io/maintenance/yes/2018)](#)
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen.svg?style=flat-square)](https://ramonsmit.github.com/Nestable2/)
 [![Build Status](https://travis-ci.org/RamonSmit/Nestable2.svg)](https://travis-ci.org/RamonSmit/Nestable2)
 [![License](https://img.shields.io/npm/l/nestable2.svg?style=flat-square)](https://github.com/RamonSmit/Nestable2/blob/master/LICENSE)
