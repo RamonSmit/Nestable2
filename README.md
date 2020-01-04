@@ -266,8 +266,7 @@ NOTE: serialized JSON has been expanded so that an optional "content" property c
 Or do it yourself the old-fashioned way:
 ```html
 <div class="dd" id="nestable3">
-    <ol class='dd-list dd3-list'>
-        <div id="dd-empty-placeholder"></div>
+    <ol class='dd-list dd3-list' id="dd-empty-placeholder">
     </ol>
 </div>
 
