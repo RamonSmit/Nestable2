@@ -259,17 +259,23 @@
         },
 
         //removes item and additional elements from list
-        removeItem: function (item){
+        removeItem: function (item, keepChilds){
             var opts = this.options,
                 el   = this.el;
 
-            // remove item
+            // get item
             item = item || this;
-            item.remove();
 
-            // remove empty children lists
             var emptyListsSelector = '.' + opts.listClass
                 + ' .' + opts.listClass + ':not(:has(*))';
+
+            if(keepChilds) {
+                var keepChilds_html = $(item).find('.' + opts.listClass).html();
+                $(item).closest('ol').append(keepChilds_html);
+            }
+
+            // remove item
+            item.remove();
             $(el).find(emptyListsSelector).remove();
 
             // remove buttons if parents do not have children
@@ -283,7 +289,7 @@
         },
 
         //removes item by itemId and run callback at the end
-        remove: function (itemId, callback)
+        remove: function (itemId, keepChilds, callback)
         {
             var opts = this.options;
             var list = this;
@@ -298,11 +304,11 @@
             //add fadeOut effect when removing
             if (animation === 'fade'){
                 item.fadeOut(time, function(){
-                    list.removeItem(item);
+                    list.removeItem(item, keepChilds);
                 });
             }
             else {
-                this.removeItem(item);
+                this.removeItem(item, keepChilds);
             }
 
             if (callback) callback();
@@ -325,7 +331,7 @@
             function remove(){
                 //Removes each item and its children.
                 items.each(function() {
-                    list.removeItem($(this));
+                    list.removeItem($(this), false);
                 });
                 //Now we can again show our node element
                 node.show();
