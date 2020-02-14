@@ -65,6 +65,7 @@
         callback: function(l, e, p) {},
         onDragStart: function(l, e, p) {},
         beforeDragStop: function(l, e, p) {},
+        afterRestoreItem: function(l, e, p) {},
         listRenderer: function(children, options) {
             var html = '<' + options.listNodeName + ' class="' + options.listClass + '">';
             html += children;
@@ -769,6 +770,13 @@
             //Put drag element at current element position.
             function placeElement(currentEl, dragElement) {
                 if (indexArray[lastIndex] === 0) {
+                    if ($(currentEl).hasClass(defaults.emptyClass)) {
+                		var currentElParent = currentEl.parentNode;
+                		currentElParent.removeChild(currentEl);
+                		currentEl = document.createElement(defaults.listNodeName);
+                		currentEl.classList.add(defaults.listClass);
+                		currentElParent.appendChild(currentEl);
+                	}
                     $(currentEl).prepend(dragElement.clone(true)); //using true saves added to element events.
                 }
                 else {
@@ -815,6 +823,7 @@
                 }
                 this.restoreItemAtIndex(el, srcIndex);
                 this.reset();
+                this.options.afterRestoreItem.call(this, this.el, el, this.placeEl.parent());
                 return;
             }
 
@@ -823,6 +832,7 @@
             if (this.hasNewRoot) {
                 if (this.options.fixed === true) {
                     this.restoreItemAtIndex(el, srcIndex);
+                    this.options.afterRestoreItem.call(this, this.el, el, this.placeEl.parent());
                 }
                 else {
                     this.el.trigger('lostItem');
