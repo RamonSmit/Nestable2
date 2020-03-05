@@ -2,7 +2,7 @@
  * Nestable jQuery Plugin - Copyright (c) 2014 Ramon Smit - https://github.com/RamonSmit/Nestable
  */
 
-(function($, window, document, undefined) {
+(function($, window, document) {
     var hasTouch = 'ontouchstart' in document;
 
     /**
@@ -79,15 +79,22 @@
 
             var html = '<' + options.itemNodeName + item_attrs_string + '>';
             html += '<' + options.handleNodeName + ' class="' + options.handleClass + '">';
+            if (options.dd3) {
+                html += 'Drop';
+                html += '</' + options.handleNodeName + '>';
+            }
             html += '<' + options.contentNodeName + ' class="' + options.contentClass + '">';
             html += content;
             html += '</' + options.contentNodeName + '>';
-            html += '</' + options.handleNodeName + '>';
+            if (!options.dd3) {
+                html += '</' + options.handleNodeName + '>';
+            }
             html += children;
             html += '</' + options.itemNodeName + '>';
 
             return html;
-        }
+        },
+        dd3: false
     };
 
     function Plugin(element, options) {
@@ -108,6 +115,12 @@
         }
 
         this.options = $.extend({}, defaults, options);
+
+        if (this.options.dd3) {
+            this.options.itemClass += ' dd3-item';
+            this.options.handleClass += ' dd3-handle';
+            this.options.contentClass += ' dd3-content';
+        }
 
         // build HTML from serialized JSON if passed
         if (this.options.json !== undefined) {

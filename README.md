@@ -319,6 +319,7 @@ You can change the follow options:
 * `scrollSpeed` speed of the scroll (default: `5`)
 * `scrollTriggers` distance from the border where scrolling become active (default: `{ top: 40, left: 40, right: -40, bottom: -40 }`)
 * `effect` removing items animation effect (default: `{ animation: 'none', time: 'slow'}`). To fadeout elements set 'animation' value to 'fade', during initialization the plugin.
+* `dd3` Separate the structures of `dd-handle` and `dd-content` (default: `false`). Add `dd3-*` to the `dd-handle`, `dd-content`, `dd-item` classname.
 
 These advanced config options are also available:
 

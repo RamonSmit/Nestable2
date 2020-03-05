@@ -1,41 +1,50 @@
-const gulp = require('gulp');
 const uglify = require("gulp-uglify");
 const cleanCss = require("gulp-clean-css");
 const eslint = require("gulp-eslint");
 const rename = require("gulp-rename");
 const sass = require('gulp-sass');
 
+const { series, parallel, src, dest } = require('gulp');
 const file = 'jquery.nestable';
 
-// compress js
-gulp.task('js', function () {
-    gulp.src(file + '.js')
-        .pipe(uglify())
-        .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist/'));
-});
+function javascript (cb) {
+  src(file + '.js')
+    .pipe(uglify())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(dest('dist/'));
+  cb();
+}
 
-// compile SASS to CSS
-gulp.task('sass', function () {
-    return gulp.src(file + '.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('.'));
-});
+function sassTask (cb) {
+  src(file + '.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(dest('.'))
+  cb();
+}
 
-// compress css
-gulp.task('css', ['sass'], function () {
-    gulp.src(file + '.css')
-        .pipe(cleanCss())
-        .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist/'));
-});
+function css (cb) {
+  src(file + '.css')
+    .pipe(cleanCss())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(dest('dist/'));
+  cb();
+};
 
-gulp.task('test', function () {
-    return gulp.src([file + '.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
+function test (cb) {
+  src([file + '.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+  cb();
+}
 
-// build assets
-gulp.task('default', ['js', 'css']);
+function clean(cb) {
+  // body omitted
+  cb();
+}
+
+const build = parallel(series(sassTask, css), javascript)
+  
+exports.test = test;
+exports.build = build;
+exports.default = series(clean, build);
